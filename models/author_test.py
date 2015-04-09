@@ -98,7 +98,24 @@ class AuthorTests(unittest.TestCase):
       author.AddBlogPost(blogpost)
 
     result = author.GetBlogPosts()
-    self.assertEquals(result, blogposts) 
+    self.assertEquals(result, blogposts)
+
+  def testGetComments_NoComments(self):
+    author = author_model.Author(self.username)
+    result = author.GetComments()
+    expected = []
+
+    self.assertEquals(result, expected)
+
+  def testGetComments_WithComments(self):
+    author = author_model.Author(self.username)
+
+    comments = [Comment() for unused_x in xrange(5)]
+    for comment in comments:
+      author.AddComment(comment)
+
+    result = author.GetComments()
+    self.assertEquals(result, comments) 
 
 if __name__ == '__main__':
   unittest.main()
