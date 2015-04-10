@@ -11,38 +11,40 @@ class BaseModel(object):
     """Base model class to inherit from, to avoid duplication."""
     self.id = id(self)
     self.created_timestamp = datetime.datetime.utcnow()
-    self.plural_class_name = '%ss' % self.__class__.__name__.lower()
-    
-    if not self.instances.get(self.plural_class_name):
-      self.instances[self.plural_class_name] = OrderedDict()
+
+    if self.__class__.__name__ not in self.instances: 
+      self.instances[self.__class__.__name__] = OrderedDict()
 
   def put(self):
+    """Stores the object in the instances dictionary, if not present."""
     storage_key = self.GetStorageKey_()
-    if not self.instances[self.plural_class_name].get(storage_key):
-      self.instances[self.plural_class_name][storage_key] = self
-      print '%s, a %s, has been put.' % (storage_key,
-                                         self.__class__.__name__)
-    else:
-      print '%s, a %s, has already been put.' % (storage_key,
-                                                 self.__class__.__name__)
- 
+    if storage_key not in self.instances[self.__class__.__name__]:
+      self.instances[self.__class__.__name__][storage_key] = self
+
   def GetStorageKey_(self):
+    """Gets the storage key to use.
+
+    Returns:
+      The storage key as a string.
+    """
     if hasattr(self, 'storage_key'):
       return getattr(self, 'storage_key')
     return self.id
 
   @classmethod
   def GetAll(cls):
-    plural_class_name = cls.get_plural_class_name_()
-    return cls.instances[plural_class_name].values()
+    """Gets all stored instances of this object.
+
+    Returns:
+      A list of object instances, if found. Otherwise, an empty list.
+    """
+    return cls.instances.get(cls.__name__, {}).values()
 
   @classmethod
   def GetByStorageKey(cls, storage_key):
-    plural_class_name = cls.get_plural_class_name_()
-    if not cls.instances.get(plural_class_name):
-      return None
-    return cls.instances[plural_class_name].get(storage_key, None)
+    """Gets a specific instance of this object.
 
-  @classmethod
-  def get_plural_class_name_(cls):
-    return '%ss' % cls.__name__.lower()
+    Returns:
+      A specific model instance, if found. Otherwise, None.
+    """
+    return cls.instances.get(cls.__name__, {}).get(storage_key, None)
