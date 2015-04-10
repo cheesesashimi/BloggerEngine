@@ -1,30 +1,25 @@
 #!/usr/bin/python
 
+import mock
 import unittest
 import author as author_model
+import blogpost as blogpost_model
+import comment as comment_model
+
 from collections import OrderedDict
-
-
-class BlogPost(object):
-  """Stub BlogPost class."""
-  def __init__(self):
-    self.id = id(self)
-
-
-class Comment(object):
-  """Stub Comment class."""
-  def __init__(self):
-    self.id = id(self)    
 
 
 class AuthorTests(unittest.TestCase):
   def setUp(self):
+    author_model.Author.instances = {}
     self.username = 'zack'
-    self.blogpost = BlogPost()
-    self.comment = Comment()
+    self.blogpost = self.GenerateBlogPosts().next()
+    self.comment = self.GenerateComments().next()
 
   def tearDown(self):
-    pass
+    del self.username
+    del self.blogpost
+    del self.comment
 
   def testConstructor(self):
     author = author_model.Author(self.username)
@@ -52,8 +47,7 @@ class AuthorTests(unittest.TestCase):
   def testAddBlogPost_MultiplePosts(self):
     author = author_model.Author(self.username)
 
-    for unused_x in xrange(5):
-      blogpost = BlogPost()
+    for blogpost in self.GenerateBlogPosts():
       author.AddBlogPost(blogpost)
       self.assertTrue(blogpost.id in author.blogposts)
 
@@ -76,8 +70,7 @@ class AuthorTests(unittest.TestCase):
   def testAddComment_MultipleComments(self):
     author = author_model.Author(self.username)
 
-    for unused_x in xrange(5):
-      comment = Comment()
+    for comment in self.GenerateComments():
       author.AddComment(comment)
       self.assertTrue(comment.id in author.comments)
 
@@ -93,7 +86,7 @@ class AuthorTests(unittest.TestCase):
   def testGetBlogPosts_WithBlogPosts(self):
     author = author_model.Author(self.username)
 
-    blogposts = [BlogPost() for unused_x in xrange(5)]
+    blogposts = list(self.GenerateBlogPosts())
     for blogpost in blogposts:
       author.AddBlogPost(blogpost)
 
@@ -110,12 +103,47 @@ class AuthorTests(unittest.TestCase):
   def testGetComments_WithComments(self):
     author = author_model.Author(self.username)
 
-    comments = [Comment() for unused_x in xrange(5)]
+    comments = list(self.GenerateComments())
     for comment in comments:
       author.AddComment(comment)
 
     result = author.GetComments()
-    self.assertEquals(result, comments) 
+    self.assertEquals(result, comments)
+
+  def testPut(self):
+    author = author_model.Author(self.username)
+    author.put()
+
+    self.assertTrue(
+        author.username in author_model.Author.instances['Author'])
+
+  def testGetAll(self):
+    author = author_model.Author(self.username)
+    author.put()
+
+    result = author_model.Author.GetAll()
+    expected = [author]
+    self.assertEquals(result, expected)
+
+  def testGetByStorageKey(self):
+    author = author_model.Author(self.username)
+    author.put()
+
+    result = author_model.Author.GetByStorageKey(self.username)
+    expected = author
+    self.assertEquals(result, expected)
+
+  def GenerateBlogPosts(self):
+    for unused_x in xrange(5):
+      blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
+      blogpost.id = id(blogpost)
+      yield blogpost
+
+  def GenerateComments(self):
+    for unused_x in xrange(5):
+      comment = mock.MagicMock(spec=comment_model.Comment)
+      comment.id = id(comment)
+      yield comment
 
 if __name__ == '__main__':
   unittest.main()

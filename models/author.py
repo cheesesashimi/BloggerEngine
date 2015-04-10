@@ -12,6 +12,7 @@ class Author(base_model.BaseModel):
       username: String; A string of the author's username.
     """
     super(Author, self).__init__()
+    self.storage_key = username
     self.username = username
     self.comments = OrderedDict()
     self.blogposts = OrderedDict()
