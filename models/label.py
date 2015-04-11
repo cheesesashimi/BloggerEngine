@@ -19,15 +19,25 @@ class Label(base_model.BaseModel):
         self.blogposts = OrderedDict()
 
     def AddToBlogpost(self, blogpost):
-        """Adds a label to a given blogpost.
+        """Adds this label to a given blogpost.
 
         Args:
-          blogpost: Blogpost; The blogpost to add the label to.
+          blogpost: Blogpost; The blogpost to remove this label from.
 
         """
         if blogpost.id not in self.blogposts:
             self.blogposts[blogpost.id] = blogpost
         blogpost.AddLabel(self)
+
+    def RemoveFromBlogpost(self, blogpost):
+        """Removes this label from a given blogpost.
+
+        Args:
+          blogpost: Blogpost; The blogpost to remove this label from.
+        """
+        if blogpost.id in self.blogposts:
+            del self.blogposts[blogpost.id]
+        blogpost.RemoveLabel(self)
 
     def GetBlogposts(self):
         """Gets all blogposts with this label.

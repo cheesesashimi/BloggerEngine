@@ -47,6 +47,27 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertTrue(self.comment.id in blogpost.comments)
 
+    def testRemoveComment_CommentFound(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+        blogpost.AddComment(self.comment)
+
+        self.assertTrue(self.comment.id in blogpost.comments)
+
+        blogpost.RemoveComment(self.comment)
+        
+        self.assertTrue(self.comment.id not in blogpost.comments)
+
+    def testRemoveComment_CommentNotFound(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+
+        self.assertTrue(self.comment.id not in blogpost.comments)
+
+        blogpost.RemoveComment(self.comment)
+        
+        self.assertTrue(self.comment.id not in blogpost.comments)
+
     def testAddComment_MultipleComments(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
@@ -72,6 +93,28 @@ class BlogpostTests(unittest.TestCase):
             self.assertTrue(label.label in blogpost.labels)
 
         self.assertEquals(len(blogpost.labels), 5)
+
+    def testRemoveLabel_LabelFound(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+
+        blogpost.AddLabel(self.label)
+
+        self.assertTrue(self.label.label in blogpost.labels)
+
+        blogpost.RemoveLabel(self.label)
+
+        self.assertTrue(self.label.label not in blogpost.labels)
+
+    def testRemoveLabel_LabelNotFound(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+
+        self.assertTrue(self.label.label not in blogpost.labels)
+
+        blogpost.RemoveLabel(self.label)
+
+        self.assertTrue(self.label.label not in blogpost.labels)
 
     def testGetComments_WithComments(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,

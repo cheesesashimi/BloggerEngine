@@ -29,6 +29,15 @@ class Blogpost(base_model.BaseModel):
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
 
+    def RemoveComment(self, comment):
+        """Removes a comment from this blog post.
+
+        Args:
+          comment: Comment; the comment to remove.
+        """
+        if comment.id in self.comments:
+            del self.comments[comment.id]
+
     def AddLabel(self, label):
         """Adds a label to this blog post.
 
@@ -38,6 +47,16 @@ class Blogpost(base_model.BaseModel):
         """
         if label.label not in self.labels:
             self.labels[label.label] = label
+
+    def RemoveLabel(self, label):
+        """Removes a label from this blog post.
+
+        Args:
+          label: Label; the label to remove.
+
+        """
+        if label.label in self.labels:
+            del self.labels[label.label]
 
     def GetComments(self):
         """Gets all the comments associated with this blog post.
