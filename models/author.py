@@ -39,20 +39,20 @@ class Author(base_model.BaseModel):
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
 
-    def DeleteBlogpost(self, blogpost):
-        """Deletes a blogpost from the author's dictionary of blogposts.
+    def RemoveBlogpost(self, blogpost):
+        """Removes a blogpost from the author's dictionary of blogposts.
 
         Args:
-          blogpost: Blogpsot; the blogpost to delete.
+          blogpost: Blogpsot; the blogpost to remove.
         """
         if blogpost.id in self.blogposts:
             del self.blogposts[blogpost.id]
 
-    def DeleteComment(self, comment):
-        """Deletes a comment from the author's dictionary of blogposts.
+    def RemoveComment(self, comment):
+        """Removes a comment from the author's dictionary of blogposts.
 
         Args:
-          comment: Comment; the comment to delete.
+          comment: Comment; the comment to remove.
         """
         if comment.id in self.comments:
             del self.comments[comment.id]

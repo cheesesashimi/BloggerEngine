@@ -54,22 +54,22 @@ class AuthorTests(unittest.TestCase):
 
         self.assertEquals(len(author.blogposts), 5)
 
-    def testDeleteBlogpost_PostExists(self):
+    def testRemoveBlogpost_PostExists(self):
         author = author_model.Author(self.username)
         author.AddBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id in author.blogposts)
 
-        author.DeleteBlogpost(self.blogpost)
+        author.RemoveBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id not in author.blogposts)
 
-    def testDeleteBlogpost_PostDoesNotExist(self):
+    def testRemoveBlogpost_PostDoesNotExist(self):
         author = author_model.Author(self.username)
 
         self.assertTrue(self.blogpost.id not in author.blogposts)
 
-        author.DeleteBlogpost(self.blogpost)
+        author.RemoveBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id not in author.blogposts)
 
@@ -96,22 +96,22 @@ class AuthorTests(unittest.TestCase):
 
         self.assertEqual(len(author.comments), 5)
 
-    def testDeleteComment_CommentPresent(self):
+    def testRemoveComment_CommentPresent(self):
         author = author_model.Author(self.username)
         author.AddComment(self.comment)
 
         self.assertTrue(self.comment.id in author.comments)
 
-        author.DeleteComment(self.comment)
+        author.RemoveComment(self.comment)
 
         self.assertTrue(self.comment.id not in author.comments)
 
-    def testDeleteComment_CommentNotPresent(self):
+    def testRemoveComment_CommentNotPresent(self):
         author = author_model.Author(self.username)
 
         self.assertTrue(self.comment.id not in author.comments)
 
-        author.DeleteComment(self.comment)
+        author.RemoveComment(self.comment)
 
         self.assertTrue(self.comment.id not in author.comments)
 
