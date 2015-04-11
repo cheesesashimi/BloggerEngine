@@ -241,5 +241,59 @@ class BloggerEngineTest(unittest.TestCase):
     expected = self.blogposts
     self.assertEquals(result, expected)
 
+  def testGetCommentsByBlogPost_BlogPostFound(self):
+    blogpost_id = self.blogposts[0].id
+    result = self.blogger_engine.GetCommentsByBlogPost(blogpost_id)
+    expected = [self.comments[0]]
+    self.assertEquals(result, expected)
+
+  def testGetCommentsByBlogPost_BlogPostNotFound(self):
+    blogpost_id = '12345'
+    result = self.blogger_engine.GetCommentsByBlogPost(blogpost_id)
+    self.assertIsNone(result)
+
+  def testGetCommentsOnBlogPostFilteredByUser_BlogPostFound(self):
+    blogpost_id = self.blogposts[0].id
+    result = self.blogger_engine.GetCommentsOnBlogPostFilteredByUser(
+        'colin', blogpost_id)
+    expected = [self.comments[0]]
+    self.assertEquals(result, expected)
+
+  def testGetCommentsOnBlogPostFilteredByUser_NoCommentsForUser(self):
+    blogpost_id = self.blogposts[0].id
+    result = self.blogger_engine.GetCommentsOnBlogPostFilteredByUser(
+        'zack', blogpost_id)
+    expected = []
+    self.assertEquals(result, expected)
+
+  def testGetCommentsOnBlogPostFilteredByUser_BlogPostNotFound(self):
+    blogpost_id = '12345'
+    result = self.blogger_engine.GetCommentsOnBlogPostFilteredByUser(
+        'colin', blogpost_id)
+    self.assertIsNone(result)
+
+  def testGetLabelsByBlogPost_BlogPostFound(self):
+    blogpost_id = self.blogposts[0].id
+    result = self.blogger_engine.GetLabelsByBlogPost(blogpost_id)
+    expected = [self.labels[0], self.labels[2]]
+    self.assertEquals(result, expected)
+
+  def testGetLabelsByBlogPost_BlogPostNotFound(self):
+    blogpost_id = '12345' 
+    result = self.blogger_engine.GetLabelsByBlogPost(blogpost_id)
+    self.assertIsNone(result)
+
+  def testGetLabelsByBlogPost_BlogPostHasNoLabels(self):
+    blogpost = blogpost_model.BlogPost(self.authors[0],
+                                       'Garbage Day...',
+                                       '...is a very dangerous day.')
+    blogpost.put()
+
+    result = self.blogger_engine.GetLabelsByBlogPost(blogpost.id)
+    expected = []
+    self.assertEquals(result, [])
+
+
+
 if __name__ == '__main__':
   unittest.main()

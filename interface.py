@@ -67,6 +67,47 @@ class BloggerEngine(object):
 
     return comment 
 
+  def GetCommentsByBlogPost(self, blogpost_id):
+    """Gets all comments for a given blogpost.
+
+    Args:
+      blogpost_id: string; The blogpost ID to retrieve comments from.
+
+    Returns:
+      A list of comments associated with this blogpost.
+    """
+    blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+    if blogpost:
+      return blogpost.GetComments()
+
+  def GetLabelsByBlogPost(self, blogpost_id):
+    """Gets all labels associated with a given blogpost.
+
+    Args:
+      blogpost_id: string; The blogpost ID to retrieve labels from,
+
+    Returns:
+      A list of labels associated with this blogpost.
+    """
+    blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+    if blogpost:
+      return blogpost.GetLabels()
+
+  def GetCommentsOnBlogPostFilteredByUser(self, username, blogpost_id):
+    """Gets all comments on a given blogpost, filtered by a username.
+
+    Args:
+      username: string; The username to retrieve comments for.
+
+    Returns:
+      A list of comments, if found.
+    """
+    comments = self.GetCommentsByBlogPost(blogpost_id)
+    if comments:
+      return [comment
+              for comment in comments
+              if comment.author.username == username]
+
   def GetCommentsByUsername(self, username):
     """Gets all comments for a given username.
 
