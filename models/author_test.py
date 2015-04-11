@@ -10,140 +10,141 @@ from collections import OrderedDict
 
 
 class AuthorTests(unittest.TestCase):
-  def setUp(self):
-    author_model.Author.instances = {}
-    self.username = 'zack'
-    self.blogpost = self.GenerateBlogPosts().next()
-    self.comment = self.GenerateComments().next()
 
-  def tearDown(self):
-    del self.username
-    del self.blogpost
-    del self.comment
+    def setUp(self):
+        author_model.Author.instances = {}
+        self.username = 'zack'
+        self.blogpost = self.GenerateBlogPosts().next()
+        self.comment = self.GenerateComments().next()
 
-  def testConstructor(self):
-    author = author_model.Author(self.username)
+    def tearDown(self):
+        del self.username
+        del self.blogpost
+        del self.comment
 
-    self.assertEquals(author.username, self.username)
-    self.assertIsInstance(author.comments, OrderedDict)
-    self.assertIsInstance(author.blogposts, OrderedDict)
-    self.assertIsNotNone(author.created_timestamp)
-    self.assertIsNotNone(author.id)
+    def testConstructor(self):
+        author = author_model.Author(self.username)
 
-  def testAddBlogPost_NewPost(self):
-    author = author_model.Author(self.username)
-    author.AddBlogPost(self.blogpost)
+        self.assertEquals(author.username, self.username)
+        self.assertIsInstance(author.comments, OrderedDict)
+        self.assertIsInstance(author.blogposts, OrderedDict)
+        self.assertIsNotNone(author.created_timestamp)
+        self.assertIsNotNone(author.id)
 
-    self.assertTrue(self.blogpost.id in author.blogposts)
+    def testAddBlogPost_NewPost(self):
+        author = author_model.Author(self.username)
+        author.AddBlogPost(self.blogpost)
 
-  def testAddBlogPost_ExistingPost(self):
-    author = author_model.Author(self.username)
-    author.AddBlogPost(self.blogpost)
-    author.AddBlogPost(self.blogpost)
+        self.assertTrue(self.blogpost.id in author.blogposts)
 
-    self.assertTrue(self.blogpost.id in author.blogposts)
-    self.assertEqual(len(author.blogposts), 1)
+    def testAddBlogPost_ExistingPost(self):
+        author = author_model.Author(self.username)
+        author.AddBlogPost(self.blogpost)
+        author.AddBlogPost(self.blogpost)
 
-  def testAddBlogPost_MultiplePosts(self):
-    author = author_model.Author(self.username)
+        self.assertTrue(self.blogpost.id in author.blogposts)
+        self.assertEqual(len(author.blogposts), 1)
 
-    for blogpost in self.GenerateBlogPosts():
-      author.AddBlogPost(blogpost)
-      self.assertTrue(blogpost.id in author.blogposts)
+    def testAddBlogPost_MultiplePosts(self):
+        author = author_model.Author(self.username)
 
-    self.assertEquals(len(author.blogposts), 5)
+        for blogpost in self.GenerateBlogPosts():
+            author.AddBlogPost(blogpost)
+            self.assertTrue(blogpost.id in author.blogposts)
 
-  def testAddComment_NewComment(self):
-    author = author_model.Author(self.username)
-    author.AddComment(self.comment)
+        self.assertEquals(len(author.blogposts), 5)
 
-    self.assertTrue(self.comment.id in author.comments)
+    def testAddComment_NewComment(self):
+        author = author_model.Author(self.username)
+        author.AddComment(self.comment)
 
-  def testAddComment_ExistingComment(self):
-    author = author_model.Author(self.username)
-    author.AddComment(self.comment)
-    author.AddComment(self.comment)
+        self.assertTrue(self.comment.id in author.comments)
 
-    self.assertEquals(len(author.comments), 1)
-    self.assertTrue(self.comment.id in author.comments)
+    def testAddComment_ExistingComment(self):
+        author = author_model.Author(self.username)
+        author.AddComment(self.comment)
+        author.AddComment(self.comment)
 
-  def testAddComment_MultipleComments(self):
-    author = author_model.Author(self.username)
+        self.assertEquals(len(author.comments), 1)
+        self.assertTrue(self.comment.id in author.comments)
 
-    for comment in self.GenerateComments():
-      author.AddComment(comment)
-      self.assertTrue(comment.id in author.comments)
+    def testAddComment_MultipleComments(self):
+        author = author_model.Author(self.username)
 
-    self.assertEqual(len(author.comments), 5)
+        for comment in self.GenerateComments():
+            author.AddComment(comment)
+            self.assertTrue(comment.id in author.comments)
 
-  def testGetBlogPosts_NoBlogPosts(self):
-    author = author_model.Author(self.username)
-    result = author.GetBlogPosts()
-    expected = []
+        self.assertEqual(len(author.comments), 5)
 
-    self.assertEquals(result, expected)
+    def testGetBlogPosts_NoBlogPosts(self):
+        author = author_model.Author(self.username)
+        result = author.GetBlogPosts()
+        expected = []
 
-  def testGetBlogPosts_WithBlogPosts(self):
-    author = author_model.Author(self.username)
+        self.assertEquals(result, expected)
 
-    blogposts = list(self.GenerateBlogPosts())
-    for blogpost in blogposts:
-      author.AddBlogPost(blogpost)
+    def testGetBlogPosts_WithBlogPosts(self):
+        author = author_model.Author(self.username)
 
-    result = author.GetBlogPosts()
-    self.assertEquals(result, blogposts)
+        blogposts = list(self.GenerateBlogPosts())
+        for blogpost in blogposts:
+            author.AddBlogPost(blogpost)
 
-  def testGetComments_NoComments(self):
-    author = author_model.Author(self.username)
-    result = author.GetComments()
-    expected = []
+        result = author.GetBlogPosts()
+        self.assertEquals(result, blogposts)
 
-    self.assertEquals(result, expected)
+    def testGetComments_NoComments(self):
+        author = author_model.Author(self.username)
+        result = author.GetComments()
+        expected = []
 
-  def testGetComments_WithComments(self):
-    author = author_model.Author(self.username)
+        self.assertEquals(result, expected)
 
-    comments = list(self.GenerateComments())
-    for comment in comments:
-      author.AddComment(comment)
+    def testGetComments_WithComments(self):
+        author = author_model.Author(self.username)
 
-    result = author.GetComments()
-    self.assertEquals(result, comments)
+        comments = list(self.GenerateComments())
+        for comment in comments:
+            author.AddComment(comment)
 
-  def testPut(self):
-    author = author_model.Author(self.username)
-    author.put()
+        result = author.GetComments()
+        self.assertEquals(result, comments)
 
-    self.assertTrue(
-        author.username in author_model.Author.instances['Author'])
+    def testPut(self):
+        author = author_model.Author(self.username)
+        author.put()
 
-  def testGetAll(self):
-    author = author_model.Author(self.username)
-    author.put()
+        self.assertTrue(
+            author.username in author_model.Author.instances['Author'])
 
-    result = author_model.Author.GetAll()
-    expected = [author]
-    self.assertEquals(result, expected)
+    def testGetAll(self):
+        author = author_model.Author(self.username)
+        author.put()
 
-  def testGetByStorageKey(self):
-    author = author_model.Author(self.username)
-    author.put()
+        result = author_model.Author.GetAll()
+        expected = [author]
+        self.assertEquals(result, expected)
 
-    result = author_model.Author.GetByStorageKey(self.username)
-    expected = author
-    self.assertEquals(result, expected)
+    def testGetByStorageKey(self):
+        author = author_model.Author(self.username)
+        author.put()
 
-  def GenerateBlogPosts(self):
-    for unused_x in xrange(5):
-      blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
-      blogpost.id = id(blogpost)
-      yield blogpost
+        result = author_model.Author.GetByStorageKey(self.username)
+        expected = author
+        self.assertEquals(result, expected)
 
-  def GenerateComments(self):
-    for unused_x in xrange(5):
-      comment = mock.MagicMock(spec=comment_model.Comment)
-      comment.id = id(comment)
-      yield comment
+    def GenerateBlogPosts(self):
+        for unused_x in xrange(5):
+            blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
+            blogpost.id = id(blogpost)
+            yield blogpost
+
+    def GenerateComments(self):
+        for unused_x in xrange(5):
+            comment = mock.MagicMock(spec=comment_model.Comment)
+            comment.id = id(comment)
+            yield comment
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

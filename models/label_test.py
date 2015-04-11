@@ -10,87 +10,88 @@ from collections import OrderedDict
 
 
 class LabelTest(unittest.TestCase):
-  def setUp(self):
-    label_model.Label.instances = {}
-    self.blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
 
-  def tearDown(self):
-    del self.blogpost
+    def setUp(self):
+        label_model.Label.instances = {}
+        self.blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
 
-  def testConstructor(self):
-    label = label_model.Label('Test')
-    self.assertEquals(label.label, 'test')
-    self.assertIsInstance(label.blogposts, OrderedDict)
+    def tearDown(self):
+        del self.blogpost
 
-  def testAddToBlogPost_NewPost(self):
-    label = label_model.Label('Test')
-    self.blogpost.id = '12345'
+    def testConstructor(self):
+        label = label_model.Label('Test')
+        self.assertEquals(label.label, 'test')
+        self.assertIsInstance(label.blogposts, OrderedDict)
 
-    label.AddToBlogPost(self.blogpost)
+    def testAddToBlogPost_NewPost(self):
+        label = label_model.Label('Test')
+        self.blogpost.id = '12345'
 
-    self.assertTrue(self.blogpost.id in label.blogposts)
+        label.AddToBlogPost(self.blogpost)
 
-    self.assertEquals(len(label.blogposts), 1)
-    self.assertTrue(self.blogpost.AddLabel.called)
-    self.assertEquals(self.blogpost.AddLabel.call_count, 1)
+        self.assertTrue(self.blogpost.id in label.blogposts)
 
-  def testAddToBlogPost_AlreadyAdded(self):
-    label = label_model.Label('Test')
-    self.blogpost.id = '12345'
+        self.assertEquals(len(label.blogposts), 1)
+        self.assertTrue(self.blogpost.AddLabel.called)
+        self.assertEquals(self.blogpost.AddLabel.call_count, 1)
 
-    label.AddToBlogPost(self.blogpost)
-    label.AddToBlogPost(self.blogpost)
- 
-    self.assertTrue(self.blogpost.id in label.blogposts)
+    def testAddToBlogPost_AlreadyAdded(self):
+        label = label_model.Label('Test')
+        self.blogpost.id = '12345'
 
-    self.assertEquals(len(label.blogposts), 1)
-    self.assertTrue(self.blogpost.AddLabel.called)
-    self.assertEquals(self.blogpost.AddLabel.call_count, 2)
+        label.AddToBlogPost(self.blogpost)
+        label.AddToBlogPost(self.blogpost)
 
-  def testGetBlogPosts_WithPosts(self):
-    label = label_model.Label('Test')
-    self.blogpost.id = '12345'
+        self.assertTrue(self.blogpost.id in label.blogposts)
 
-    label.AddToBlogPost(self.blogpost)
+        self.assertEquals(len(label.blogposts), 1)
+        self.assertTrue(self.blogpost.AddLabel.called)
+        self.assertEquals(self.blogpost.AddLabel.call_count, 2)
 
-    result = label.GetBlogPosts()
-    expected = [self.blogpost]
+    def testGetBlogPosts_WithPosts(self):
+        label = label_model.Label('Test')
+        self.blogpost.id = '12345'
 
-    self.assertEquals(result, expected)
-    self.assertEquals(result[0].id, self.blogpost.id)
+        label.AddToBlogPost(self.blogpost)
 
-  def testGetBlogPosts_NoPosts(self):
-    label = label_model.Label('Test')
+        result = label.GetBlogPosts()
+        expected = [self.blogpost]
 
-    result = label.GetBlogPosts()
-    expected = []
+        self.assertEquals(result, expected)
+        self.assertEquals(result[0].id, self.blogpost.id)
 
-    self.assertEquals(result, expected) 
+    def testGetBlogPosts_NoPosts(self):
+        label = label_model.Label('Test')
 
-  def testPut(self):
-    label = label_model.Label('Test')
-    label.put()
+        result = label.GetBlogPosts()
+        expected = []
 
-    self.assertTrue(
-        label.storage_key in label_model.Label.instances['Label'])
+        self.assertEquals(result, expected)
 
-  def testGetAll(self):
-    label = label_model.Label('Test')
-    label.put()
+    def testPut(self):
+        label = label_model.Label('Test')
+        label.put()
 
-    result = label_model.Label.GetAll()
-    expected = [label]
+        self.assertTrue(
+            label.storage_key in label_model.Label.instances['Label'])
 
-    self.assertEquals(result, expected)
+    def testGetAll(self):
+        label = label_model.Label('Test')
+        label.put()
 
-  def testGetByStorageKey(self):
-    label = label_model.Label('Test')
-    label.put()
+        result = label_model.Label.GetAll()
+        expected = [label]
 
-    result = label_model.Label.GetByStorageKey(label.storage_key)
-    expected = label
+        self.assertEquals(result, expected)
 
-    self.assertEquals(result, expected)
- 
+    def testGetByStorageKey(self):
+        label = label_model.Label('Test')
+        label.put()
+
+        result = label_model.Label.GetByStorageKey(label.storage_key)
+        expected = label
+
+        self.assertEquals(result, expected)
+
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

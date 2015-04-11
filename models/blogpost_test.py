@@ -12,144 +12,145 @@ from collections import OrderedDict
 
 
 class BlogPostTests(unittest.TestCase):
-  def setUp(self):
-    blogpost_model.BlogPost.instances = {}
-    self.author = mock.MagicMock(spec=author_model.Author)
-    self.comment = self.GenerateComments().next()
-    self.label = self.GenerateLabels().next()
-    self.headline = 'Hello world!'
-    self.body = 'I\'m a blog post!'
 
-  def tearDown(self):
-    del self.author
-    del self.comment
-    del self.label
-    del self.headline
-    del self.body
+    def setUp(self):
+        blogpost_model.BlogPost.instances = {}
+        self.author = mock.MagicMock(spec=author_model.Author)
+        self.comment = self.GenerateComments().next()
+        self.label = self.GenerateLabels().next()
+        self.headline = 'Hello world!'
+        self.body = 'I\'m a blog post!'
 
-  def testConstructor(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
+    def tearDown(self):
+        del self.author
+        del self.comment
+        del self.label
+        del self.headline
+        del self.body
 
-    self.assertTrue(self.author.AddBlogPost.called)
-    self.assertEquals(self.headline, blogpost.headline)
-    self.assertEquals(self.body, blogpost.body)
-    self.assertIsInstance(blogpost.comments, OrderedDict)
-    self.assertIsInstance(blogpost.labels, OrderedDict)
-    self.assertIsNotNone(blogpost.created_timestamp)
-    self.assertIsNotNone(blogpost.id)
+    def testConstructor(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
 
-  def testAddComment(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.AddComment(self.comment)
+        self.assertTrue(self.author.AddBlogPost.called)
+        self.assertEquals(self.headline, blogpost.headline)
+        self.assertEquals(self.body, blogpost.body)
+        self.assertIsInstance(blogpost.comments, OrderedDict)
+        self.assertIsInstance(blogpost.labels, OrderedDict)
+        self.assertIsNotNone(blogpost.created_timestamp)
+        self.assertIsNotNone(blogpost.id)
 
-    self.assertTrue(self.comment.id in blogpost.comments)
+    def testAddComment(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.AddComment(self.comment)
 
-  def testAddComment_MultipleComments(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    for comment in self.GenerateComments():
-      blogpost.AddComment(comment)
-      self.assertTrue(comment.id in blogpost.comments)
+        self.assertTrue(self.comment.id in blogpost.comments)
 
-    self.assertEquals(len(blogpost.comments), 5)
+    def testAddComment_MultipleComments(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        for comment in self.GenerateComments():
+            blogpost.AddComment(comment)
+            self.assertTrue(comment.id in blogpost.comments)
 
-  def testAddLabel(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.AddLabel(self.label)
+        self.assertEquals(len(blogpost.comments), 5)
 
-    self.assertTrue(self.label.label in blogpost.labels)
+    def testAddLabel(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.AddLabel(self.label)
 
-  def testAddLabel_MultipleLabels(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
+        self.assertTrue(self.label.label in blogpost.labels)
 
-    for label in self.GenerateLabels():
-      blogpost.AddLabel(label)
-      self.assertTrue(label.label in blogpost.labels)
+    def testAddLabel_MultipleLabels(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
 
-    self.assertEquals(len(blogpost.labels), 5)
+        for label in self.GenerateLabels():
+            blogpost.AddLabel(label)
+            self.assertTrue(label.label in blogpost.labels)
 
-  def testGetComments_WithComments(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.AddComment(self.comment)
+        self.assertEquals(len(blogpost.labels), 5)
 
-    result = blogpost.GetComments()
-    expected = [self.comment]
+    def testGetComments_WithComments(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.AddComment(self.comment)
 
-    self.assertEquals(result, expected)
+        result = blogpost.GetComments()
+        expected = [self.comment]
 
-  def testGetComments_NoComments(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    result = blogpost.GetComments()
-    expected = []
+        self.assertEquals(result, expected)
 
-    self.assertEquals(result, expected)
+    def testGetComments_NoComments(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        result = blogpost.GetComments()
+        expected = []
 
-  def testGetLabels_NoLabels(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    result = blogpost.GetLabels()
-    expected = []
-    self.assertEquals(result, expected)
+        self.assertEquals(result, expected)
 
-  def testGetLabels_WithLabels(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.AddLabel(self.label)
-    result = blogpost.GetLabels()
-    expected = [self.label]
-    self.assertEquals(result, expected)
+    def testGetLabels_NoLabels(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        result = blogpost.GetLabels()
+        expected = []
+        self.assertEquals(result, expected)
 
-  def testPut(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.put()
+    def testGetLabels_WithLabels(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.AddLabel(self.label)
+        result = blogpost.GetLabels()
+        expected = [self.label]
+        self.assertEquals(result, expected)
 
-    self.assertTrue(
-      blogpost.id in blogpost_model.BlogPost.instances['BlogPost'])
-    self.assertEquals(len(blogpost_model.BlogPost.instances['BlogPost']),
-                      1)
+    def testPut(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.put()
 
-  def testGetAll(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.put()
+        self.assertTrue(
+            blogpost.id in blogpost_model.BlogPost.instances['BlogPost'])
+        self.assertEquals(len(blogpost_model.BlogPost.instances['BlogPost']),
+                          1)
 
-    result = blogpost_model.BlogPost.GetAll()
-    expected = [blogpost]
+    def testGetAll(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.put()
 
-    self.assertEquals(result, expected)
+        result = blogpost_model.BlogPost.GetAll()
+        expected = [blogpost]
 
-  def testGetByStorageKey(self):
-    blogpost = blogpost_model.BlogPost(self.author, self.headline,
-                                       self.body)
-    blogpost.put()
+        self.assertEquals(result, expected)
 
-    result = blogpost_model.BlogPost.GetByStorageKey(blogpost.id)
-    expected = blogpost
+    def testGetByStorageKey(self):
+        blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                           self.body)
+        blogpost.put()
 
-    self.assertEquals(result, expected)
+        result = blogpost_model.BlogPost.GetByStorageKey(blogpost.id)
+        expected = blogpost
 
-  def GenerateComments(self):
-    # I used a generator here since I needed to set the id property,
-    # otherwise, I would've just used a list comprehension.
-    for unused_x in xrange(5):
-      comment = mock.MagicMock(spec=comment_model.Comment)
-      comment.id = id(comment)
-      yield comment
+        self.assertEquals(result, expected)
 
-  def GenerateLabels(self):
-    # I used a generator here since I needed to set the label property,
-    # otherwise, I would've just used a list comprehension. 
-    for unused_x in xrange(5):
-      label = mock.MagicMock(spec=label_model.Label)
-      label.label = str(id(label))
-      yield label
+    def GenerateComments(self):
+        # I used a generator here since I needed to set the id property,
+        # otherwise, I would've just used a list comprehension.
+        for unused_x in xrange(5):
+            comment = mock.MagicMock(spec=comment_model.Comment)
+            comment.id = id(comment)
+            yield comment
+
+    def GenerateLabels(self):
+        # I used a generator here since I needed to set the label property,
+        # otherwise, I would've just used a list comprehension.
+        for unused_x in xrange(5):
+            label = mock.MagicMock(spec=label_model.Label)
+            label.label = str(id(label))
+            yield label
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

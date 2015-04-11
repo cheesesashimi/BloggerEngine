@@ -5,31 +5,32 @@ import base_model
 
 
 class Label(base_model.BaseModel):
-  def __init__(self, label_text):
-    """Constructor.
 
-    Args:
-      label_text: String; The text to make up the label.
-    """
-    super(Label, self).__init__()
-    self.label = label_text.lower()
-    self.storage_key = self.label
-    self.blogposts = OrderedDict()
+    def __init__(self, label_text):
+        """Constructor.
 
-  def AddToBlogPost(self, blogpost):
-    """Adds a label to a given blogpost.
+        Args:
+          label_text: String; The text to make up the label.
+        """
+        super(Label, self).__init__()
+        self.label = label_text.lower()
+        self.storage_key = self.label
+        self.blogposts = OrderedDict()
 
-    Args:
-      blogpost: BlogPost; The blogpost to add the label to.
-    """
-    if blogpost.id not in self.blogposts:
-      self.blogposts[blogpost.id] = blogpost
-    blogpost.AddLabel(self)
+    def AddToBlogPost(self, blogpost):
+        """Adds a label to a given blogpost.
 
-  def GetBlogPosts(self):
-    """Gets all blogposts with this label.
+        Args:
+          blogpost: BlogPost; The blogpost to add the label to.
+        """
+        if blogpost.id not in self.blogposts:
+            self.blogposts[blogpost.id] = blogpost
+        blogpost.AddLabel(self)
 
-    Returns:
-      A list of BlogPosts.
-    """
-    return self.blogposts.values()
+    def GetBlogPosts(self):
+        """Gets all blogposts with this label.
+
+        Returns:
+          A list of BlogPosts.
+        """
+        return self.blogposts.values()
