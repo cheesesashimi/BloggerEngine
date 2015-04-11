@@ -43,3 +43,11 @@ class BlogPost(base_model.BaseModel):
       A list of comments.
     """
     return self.comments.values()
+
+  def GetLabels(self):
+    """Gets all labels associated with this blog post.
+
+    Returns:
+      A list of labels.
+    """
+    return self.labels.values()

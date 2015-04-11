@@ -90,6 +90,21 @@ class BlogPostTests(unittest.TestCase):
 
     self.assertEquals(result, expected)
 
+  def testGetLabels_NoLabels(self):
+    blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                       self.body)
+    result = blogpost.GetLabels()
+    expected = []
+    self.assertEquals(result, expected)
+
+  def testGetLabels_WithLabels(self):
+    blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                       self.body)
+    blogpost.AddLabel(self.label)
+    result = blogpost.GetLabels()
+    expected = [self.label]
+    self.assertEquals(result, expected)
+
   def testPut(self):
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
                                        self.body)
