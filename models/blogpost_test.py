@@ -13,12 +13,19 @@ from collections import OrderedDict
 
 class BlogPostTests(unittest.TestCase):
   def setUp(self):
+    blogpost_model.BlogPost.instances = {}
     self.author = mock.MagicMock(spec=author_model.Author)
+    self.comment = self.GenerateComments().next()
+    self.label = self.GenerateLabels().next()
     self.headline = 'Hello world!'
     self.body = 'I\'m a blog post!'
 
   def tearDown(self):
     del self.author
+    del self.comment
+    del self.label
+    del self.headline
+    del self.body
 
   def testConstructor(self):
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
@@ -33,14 +40,11 @@ class BlogPostTests(unittest.TestCase):
     self.assertIsNotNone(blogpost.id)
 
   def testAddComment(self):
-    comment = mock.MagicMock(spec=comment_model.Comment)
-    comment.id = '12345'
-
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
                                        self.body)
-    blogpost.AddComment(comment)
+    blogpost.AddComment(self.comment)
 
-    self.assertTrue(comment.id in blogpost.comments)
+    self.assertTrue(self.comment.id in blogpost.comments)
 
   def testAddComment_MultipleComments(self):
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
@@ -52,14 +56,11 @@ class BlogPostTests(unittest.TestCase):
     self.assertEquals(len(blogpost.comments), 5)
 
   def testAddLabel(self):
-    label = mock.MagicMock(spec=label_model)
-    label.label = 'funny'
-
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
                                        self.body)
-    blogpost.AddLabel(label)
+    blogpost.AddLabel(self.label)
 
-    self.assertTrue(label.label in blogpost.labels)
+    self.assertTrue(self.label.label in blogpost.labels)
 
   def testAddLabel_MultipleLabels(self):
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
@@ -72,15 +73,12 @@ class BlogPostTests(unittest.TestCase):
     self.assertEquals(len(blogpost.labels), 5)
 
   def testGetComments_WithComments(self):
-    comment = mock.MagicMock(spec=comment_model.Comment)
-    comment.id = '12345'
-
     blogpost = blogpost_model.BlogPost(self.author, self.headline,
                                        self.body)
-    blogpost.AddComment(comment)
+    blogpost.AddComment(self.comment)
 
     result = blogpost.GetComments()
-    expected = [comment]
+    expected = [self.comment]
 
     self.assertEquals(result, expected)
 
@@ -89,6 +87,36 @@ class BlogPostTests(unittest.TestCase):
                                        self.body)
     result = blogpost.GetComments()
     expected = []
+
+    self.assertEquals(result, expected)
+
+  def testPut(self):
+    blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                       self.body)
+    blogpost.put()
+
+    self.assertTrue(
+      blogpost.id in blogpost_model.BlogPost.instances['BlogPost'])
+    self.assertEquals(len(blogpost_model.BlogPost.instances['BlogPost']),
+                      1)
+
+  def testGetAll(self):
+    blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                       self.body)
+    blogpost.put()
+
+    result = blogpost_model.BlogPost.GetAll()
+    expected = [blogpost]
+
+    self.assertEquals(result, expected)
+
+  def testGetByStorageKey(self):
+    blogpost = blogpost_model.BlogPost(self.author, self.headline,
+                                       self.body)
+    blogpost.put()
+
+    result = blogpost_model.BlogPost.GetByStorageKey(blogpost.id)
+    expected = blogpost
 
     self.assertEquals(result, expected)
 
@@ -101,7 +129,7 @@ class BlogPostTests(unittest.TestCase):
       yield comment
 
   def GenerateLabels(self):
-    # I used a generator here since I needed to set the id property,
+    # I used a generator here since I needed to set the label property,
     # otherwise, I would've just used a list comprehension. 
     for unused_x in xrange(5):
       label = mock.MagicMock(spec=label_model.Label)
