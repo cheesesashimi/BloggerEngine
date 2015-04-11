@@ -39,6 +39,24 @@ class Author(base_model.BaseModel):
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
 
+    def DeleteBlogpost(self, blogpost):
+        """Deletes a blogpost from the author's dictionary of blogposts.
+
+        Args:
+          blogpost: Blogpsot; the blogpost to delete.
+        """
+        if blogpost.id in self.blogposts:
+            del self.blogposts[blogpost.id]
+
+    def DeleteComment(self, comment):
+        """Deletes a comment from the author's dictionary of blogposts.
+
+        Args:
+          comment: Comment; the comment to delete.
+        """
+        if comment.id in self.comments:
+            del self.comments[comment.id]
+
     def GetBlogposts(self):
         """Gets all blog posts for this user.
 
