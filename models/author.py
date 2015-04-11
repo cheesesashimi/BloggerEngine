@@ -10,7 +10,7 @@ class Author(base_model.BaseModel):
         """Constructor.
 
         Args:
-          username: String; A string of the author's username.
+          username: string; A string of the author's username.
 
         """
         super(Author, self).__init__()
@@ -19,11 +19,11 @@ class Author(base_model.BaseModel):
         self.comments = OrderedDict()
         self.blogposts = OrderedDict()
 
-    def AddBlogPost(self, blogpost):
+    def AddBlogpost(self, blogpost):
         """Adds a blogpost to the author's dictionary of blogposts.
 
         Args:
-          blogpost: BlogPost; the blog post to add.
+          blogpost: Blogpost; the blog post to add.
 
         """
         if blogpost.id not in self.blogposts:
@@ -39,7 +39,7 @@ class Author(base_model.BaseModel):
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
 
-    def GetBlogPosts(self):
+    def GetBlogposts(self):
         """Gets all blog posts for this user.
 
         Returns:

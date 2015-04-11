@@ -13,7 +13,7 @@ class LabelTest(unittest.TestCase):
 
     def setUp(self):
         label_model.Label.instances = {}
-        self.blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
+        self.blogpost = mock.MagicMock(spec=blogpost_model.Blogpost)
 
     def tearDown(self):
         del self.blogpost
@@ -23,11 +23,11 @@ class LabelTest(unittest.TestCase):
         self.assertEquals(label.label, 'test')
         self.assertIsInstance(label.blogposts, OrderedDict)
 
-    def testAddToBlogPost_NewPost(self):
+    def testAddToBlogpost_NewPost(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
-        label.AddToBlogPost(self.blogpost)
+        label.AddToBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id in label.blogposts)
 
@@ -35,12 +35,12 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.AddLabel.called)
         self.assertEquals(self.blogpost.AddLabel.call_count, 1)
 
-    def testAddToBlogPost_AlreadyAdded(self):
+    def testAddToBlogpost_AlreadyAdded(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
-        label.AddToBlogPost(self.blogpost)
-        label.AddToBlogPost(self.blogpost)
+        label.AddToBlogpost(self.blogpost)
+        label.AddToBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id in label.blogposts)
 
@@ -48,22 +48,22 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.AddLabel.called)
         self.assertEquals(self.blogpost.AddLabel.call_count, 2)
 
-    def testGetBlogPosts_WithPosts(self):
+    def testGetBlogposts_WithPosts(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
-        label.AddToBlogPost(self.blogpost)
+        label.AddToBlogpost(self.blogpost)
 
-        result = label.GetBlogPosts()
+        result = label.GetBlogposts()
         expected = [self.blogpost]
 
         self.assertEquals(result, expected)
         self.assertEquals(result[0].id, self.blogpost.id)
 
-    def testGetBlogPosts_NoPosts(self):
+    def testGetBlogposts_NoPosts(self):
         label = label_model.Label('Test')
 
-        result = label.GetBlogPosts()
+        result = label.GetBlogposts()
         expected = []
 
         self.assertEquals(result, expected)

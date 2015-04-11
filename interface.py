@@ -10,7 +10,7 @@ class BloggerEngine(object):
 
     """BloggerEngine interface."""
 
-    def SubmitBlogPost(self, username, headline, body):
+    def SubmitBlogpost(self, username, headline, body):
         """Submits a blog post.
 
         Args:
@@ -19,17 +19,17 @@ class BloggerEngine(object):
           body: string; A string representing the body of the blog post.
 
         Returns:
-          A BlogPost instance with a nested Author instance.
+          A Blogpost instance with a nested Author instance.
 
         """
         author = self.GetOrInsertAuthor_(username)
 
-        post = blogpost_model.BlogPost(author, headline, body)
+        post = blogpost_model.Blogpost(author, headline, body)
         post.put()
 
         return post
 
-    def AddLabelToBlogPost(self, label_text, blogpost_id):
+    def AddLabelToBlogpost(self, label_text, blogpost_id):
         """Adds a label to a given blog post.
 
         Args:
@@ -40,7 +40,7 @@ class BloggerEngine(object):
           A Label instance.
 
         """
-        post = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+        post = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if not post:
             return None
 
@@ -49,7 +49,7 @@ class BloggerEngine(object):
             label = label_model.Label(label_text)
             label.put()
 
-        label.AddToBlogPost(post)
+        label.AddToBlogpost(post)
         return label
 
     def SubmitComment(self, username, comment_text, blogpost_id):
@@ -61,7 +61,7 @@ class BloggerEngine(object):
           blogpost_id: string; The blog post ID to add the comment to.
 
         """
-        post = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+        post = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if not post:
             return None
 
@@ -71,7 +71,7 @@ class BloggerEngine(object):
 
         return comment
 
-    def GetCommentsByBlogPost(self, blogpost_id):
+    def GetCommentsByBlogpost(self, blogpost_id):
         """Gets all comments for a given blogpost.
 
         Args:
@@ -81,11 +81,11 @@ class BloggerEngine(object):
           A list of comments associated with this blogpost.
 
         """
-        blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+        blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if blogpost:
             return blogpost.GetComments()
 
-    def GetLabelsByBlogPost(self, blogpost_id):
+    def GetLabelsByBlogpost(self, blogpost_id):
         """Gets all labels associated with a given blogpost.
 
         Args:
@@ -95,11 +95,11 @@ class BloggerEngine(object):
           A list of labels associated with this blogpost.
 
         """
-        blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+        blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if blogpost:
             return blogpost.GetLabels()
 
-    def GetCommentsOnBlogPostFilteredByUser(self, username, blogpost_id):
+    def GetCommentsOnBlogpostFilteredByUser(self, username, blogpost_id):
         """Gets all comments on a given blogpost, filtered by a username.
 
         Args:
@@ -109,7 +109,7 @@ class BloggerEngine(object):
           A list of comments, if found.
 
         """
-        comments = self.GetCommentsByBlogPost(blogpost_id)
+        comments = self.GetCommentsByBlogpost(blogpost_id)
         if comments:
             return [comment
                     for comment in comments
@@ -129,7 +129,7 @@ class BloggerEngine(object):
         if author:
             return author.GetComments()
 
-    def GetBlogPostsByUsername(self, username):
+    def GetBlogpostsByUsername(self, username):
         """Gets all blog posts for a given username.
 
         Args:
@@ -140,9 +140,9 @@ class BloggerEngine(object):
         """
         author = author_model.Author.GetByStorageKey(username)
         if author:
-            return author.GetBlogPosts()
+            return author.GetBlogposts()
 
-    def GetBlogPostById(self, blogpost_id):
+    def GetBlogpostById(self, blogpost_id):
         """Gets a specific blogpost by ID.
 
         Args:
@@ -152,9 +152,9 @@ class BloggerEngine(object):
           The requested blogpost or None, if not found.
 
         """
-        return blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
+        return blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
 
-    def GetBlogPostsByLabel(self, label_text):
+    def GetBlogpostsByLabel(self, label_text):
         """Gets all blogposts with a given label attached to them.
 
         Args:
@@ -166,22 +166,22 @@ class BloggerEngine(object):
         """
         label = label_model.Label.GetByStorageKey(label_text)
         if label:
-            return label.GetBlogPosts()
+            return label.GetBlogposts()
 
-    def GetAllBlogPosts(self):
+    def GetAllBlogposts(self):
         """Gets all blog posts.
 
         Returns:
           A list of blog posts.
 
         """
-        return blogpost_model.BlogPost.GetAll()
+        return blogpost_model.Blogpost.GetAll()
 
     def GetAuthorByUsername(self, username):
         """Gets an author object by username.
 
         Args:
-          username: String; The username to look up.
+          username: string; The username to look up.
 
         Returns:
           A populated Author instance, if found.
@@ -193,7 +193,7 @@ class BloggerEngine(object):
         """Gets or inserts an Author object by username.
 
         Args:
-          username: String; The username to look up.
+          username: string; The username to look up.
 
         Returns:
           A populated Author instance.

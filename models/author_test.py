@@ -14,7 +14,7 @@ class AuthorTests(unittest.TestCase):
     def setUp(self):
         author_model.Author.instances = {}
         self.username = 'zack'
-        self.blogpost = self.GenerateBlogPosts().next()
+        self.blogpost = self.GenerateBlogposts().next()
         self.comment = self.GenerateComments().next()
 
     def tearDown(self):
@@ -31,25 +31,25 @@ class AuthorTests(unittest.TestCase):
         self.assertIsNotNone(author.created_timestamp)
         self.assertIsNotNone(author.id)
 
-    def testAddBlogPost_NewPost(self):
+    def testAddBlogpost_NewPost(self):
         author = author_model.Author(self.username)
-        author.AddBlogPost(self.blogpost)
+        author.AddBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id in author.blogposts)
 
-    def testAddBlogPost_ExistingPost(self):
+    def testAddBlogpost_ExistingPost(self):
         author = author_model.Author(self.username)
-        author.AddBlogPost(self.blogpost)
-        author.AddBlogPost(self.blogpost)
+        author.AddBlogpost(self.blogpost)
+        author.AddBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id in author.blogposts)
         self.assertEqual(len(author.blogposts), 1)
 
-    def testAddBlogPost_MultiplePosts(self):
+    def testAddBlogpost_MultiplePosts(self):
         author = author_model.Author(self.username)
 
-        for blogpost in self.GenerateBlogPosts():
-            author.AddBlogPost(blogpost)
+        for blogpost in self.GenerateBlogposts():
+            author.AddBlogpost(blogpost)
             self.assertTrue(blogpost.id in author.blogposts)
 
         self.assertEquals(len(author.blogposts), 5)
@@ -77,21 +77,21 @@ class AuthorTests(unittest.TestCase):
 
         self.assertEqual(len(author.comments), 5)
 
-    def testGetBlogPosts_NoBlogPosts(self):
+    def testGetBlogposts_NoBlogposts(self):
         author = author_model.Author(self.username)
-        result = author.GetBlogPosts()
+        result = author.GetBlogposts()
         expected = []
 
         self.assertEquals(result, expected)
 
-    def testGetBlogPosts_WithBlogPosts(self):
+    def testGetBlogposts_WithBlogposts(self):
         author = author_model.Author(self.username)
 
-        blogposts = list(self.GenerateBlogPosts())
+        blogposts = list(self.GenerateBlogposts())
         for blogpost in blogposts:
-            author.AddBlogPost(blogpost)
+            author.AddBlogpost(blogpost)
 
-        result = author.GetBlogPosts()
+        result = author.GetBlogposts()
         self.assertEquals(result, blogposts)
 
     def testGetComments_NoComments(self):
@@ -134,9 +134,9 @@ class AuthorTests(unittest.TestCase):
         expected = author
         self.assertEquals(result, expected)
 
-    def GenerateBlogPosts(self):
+    def GenerateBlogposts(self):
         for unused_x in xrange(5):
-            blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
+            blogpost = mock.MagicMock(spec=blogpost_model.Blogpost)
             blogpost.id = id(blogpost)
             yield blogpost
 

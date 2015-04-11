@@ -10,8 +10,8 @@ class Comment(base_model.BaseModel):
 
         Args:
           author: Author; The author of this comment.
-          blogpost: BlogPost; The blogpost this comment belongs to.
-          comment_text: String; The comment text.
+          blogpost: Blogpost; The blogpost this comment belongs to.
+          comment_text: string; The comment text.
 
         """
         super(Comment, self).__init__()

@@ -13,7 +13,7 @@ class CommentTest(unittest.TestCase):
     def setUp(self):
         comment_model.Comment.instances = {}
         self.author = mock.MagicMock(spec=author_model.Author)
-        self.blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
+        self.blogpost = mock.MagicMock(spec=blogpost_model.Blogpost)
         self.comment_text = 'The quick brown fox jumps over the lazy dog.'
 
     def tearDown(self):

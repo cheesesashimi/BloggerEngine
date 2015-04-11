@@ -4,14 +4,14 @@ from collections import OrderedDict
 import base_model
 
 
-class BlogPost(base_model.BaseModel):
+class Blogpost(base_model.BaseModel):
 
     def __init__(self, author, headline, body):
         """Constructor."""
-        super(BlogPost, self).__init__()
+        super(Blogpost, self).__init__()
 
         self.author = author
-        self.author.AddBlogPost(self)
+        self.author.AddBlogpost(self)
 
         self.headline = headline
         self.body = body
