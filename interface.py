@@ -20,6 +20,7 @@ class BloggerEngine(object):
 
         Returns:
           A BlogPost instance with a nested Author instance.
+
         """
         author = self.GetOrInsertAuthor_(username)
 
@@ -37,6 +38,7 @@ class BloggerEngine(object):
 
         Returns:
           A Label instance.
+
         """
         post = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
         if not post:
@@ -57,6 +59,7 @@ class BloggerEngine(object):
           username: string; A string representing the comment author's username.
           comment_text: string; The comment text's content.
           blogpost_id: string; The blog post ID to add the comment to.
+
         """
         post = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
         if not post:
@@ -76,6 +79,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of comments associated with this blogpost.
+
         """
         blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
         if blogpost:
@@ -89,6 +93,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of labels associated with this blogpost.
+
         """
         blogpost = blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
         if blogpost:
@@ -102,6 +107,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of comments, if found.
+
         """
         comments = self.GetCommentsByBlogPost(blogpost_id)
         if comments:
@@ -117,6 +123,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of that user's comments, if the author is found.
+
         """
         author = author_model.Author.GetByStorageKey(username)
         if author:
@@ -129,6 +136,7 @@ class BloggerEngine(object):
           username: string; A string representing the blogpost author's username.
         Returns:
           A list of the given user's blogposts.
+
         """
         author = author_model.Author.GetByStorageKey(username)
         if author:
@@ -142,6 +150,7 @@ class BloggerEngine(object):
 
         Returns:
           The requested blogpost or None, if not found.
+
         """
         return blogpost_model.BlogPost.GetByStorageKey(blogpost_id)
 
@@ -153,6 +162,7 @@ class BloggerEngine(object):
 
         Returns:
           The requested blogposts or None, if not found.
+
         """
         label = label_model.Label.GetByStorageKey(label_text)
         if label:
@@ -163,6 +173,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of blog posts.
+
         """
         return blogpost_model.BlogPost.GetAll()
 
@@ -174,6 +185,7 @@ class BloggerEngine(object):
 
         Returns:
           A populated Author instance, if found.
+
         """
         return author_model.Author.GetByStorageKey(username)
 
@@ -185,6 +197,7 @@ class BloggerEngine(object):
 
         Returns:
           A populated Author instance.
+
         """
         author = author_model.Author.GetByStorageKey(username)
         if author:

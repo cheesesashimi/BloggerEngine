@@ -24,6 +24,7 @@ class BlogPost(base_model.BaseModel):
 
         Args:
           comment: Comment; the comment to add.
+
         """
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
@@ -33,6 +34,7 @@ class BlogPost(base_model.BaseModel):
 
         Args:
           label: Label; the label to add.
+
         """
         if label.label not in self.labels:
             self.labels[label.label] = label
@@ -42,6 +44,7 @@ class BlogPost(base_model.BaseModel):
 
         Returns:
           A list of comments.
+
         """
         return self.comments.values()
 
@@ -50,5 +53,6 @@ class BlogPost(base_model.BaseModel):
 
         Returns:
           A list of labels.
+
         """
         return self.labels.values()

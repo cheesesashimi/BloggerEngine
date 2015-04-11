@@ -11,6 +11,7 @@ class Label(base_model.BaseModel):
 
         Args:
           label_text: String; The text to make up the label.
+
         """
         super(Label, self).__init__()
         self.label = label_text.lower()
@@ -22,6 +23,7 @@ class Label(base_model.BaseModel):
 
         Args:
           blogpost: BlogPost; The blogpost to add the label to.
+
         """
         if blogpost.id not in self.blogposts:
             self.blogposts[blogpost.id] = blogpost
@@ -32,5 +34,6 @@ class Label(base_model.BaseModel):
 
         Returns:
           A list of BlogPosts.
+
         """
         return self.blogposts.values()

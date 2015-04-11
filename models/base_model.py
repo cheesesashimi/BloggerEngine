@@ -26,6 +26,7 @@ class BaseModel(object):
 
         Returns:
           The storage key as a string.
+
         """
         if hasattr(self, 'storage_key'):
             return getattr(self, 'storage_key')
@@ -37,6 +38,7 @@ class BaseModel(object):
 
         Returns:
           A list of object instances, if found. Otherwise, an empty list.
+
         """
         return cls.instances.get(cls.__name__, {}).values()
 
@@ -46,5 +48,6 @@ class BaseModel(object):
 
         Returns:
           A specific model instance, if found. Otherwise, None.
+
         """
         return cls.instances.get(cls.__name__, {}).get(storage_key, None)

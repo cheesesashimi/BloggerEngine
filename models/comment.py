@@ -12,6 +12,7 @@ class Comment(base_model.BaseModel):
           author: Author; The author of this comment.
           blogpost: BlogPost; The blogpost this comment belongs to.
           comment_text: String; The comment text.
+
         """
         super(Comment, self).__init__()
 

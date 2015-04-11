@@ -11,6 +11,7 @@ class Author(base_model.BaseModel):
 
         Args:
           username: String; A string of the author's username.
+
         """
         super(Author, self).__init__()
         self.storage_key = username
@@ -23,6 +24,7 @@ class Author(base_model.BaseModel):
 
         Args:
           blogpost: BlogPost; the blog post to add.
+
         """
         if blogpost.id not in self.blogposts:
             self.blogposts[blogpost.id] = blogpost
@@ -32,6 +34,7 @@ class Author(base_model.BaseModel):
 
         Args:
           comment: Comment; the comment to add.
+
         """
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
@@ -41,6 +44,7 @@ class Author(base_model.BaseModel):
 
         Returns:
           A list of all blog posts for this user.
+
         """
         return self.blogposts.values()
 
@@ -49,5 +53,6 @@ class Author(base_model.BaseModel):
 
         Returns:
           A list of all comments for this user.
+
         """
         return self.comments.values()
