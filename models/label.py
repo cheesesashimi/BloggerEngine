@@ -13,6 +13,7 @@ class Label(base_model.BaseModel):
     """
     super(Label, self).__init__()
     self.label = label_text.lower()
+    self.storage_key = self.label
     self.blogposts = OrderedDict()
 
   def AddToBlogPost(self, blogpost):

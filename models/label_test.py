@@ -11,6 +11,7 @@ from collections import OrderedDict
 
 class LabelTest(unittest.TestCase):
   def setUp(self):
+    label_model.Label.instances = {}
     self.blogpost = mock.MagicMock(spec=blogpost_model.BlogPost)
 
   def tearDown(self):
@@ -65,6 +66,31 @@ class LabelTest(unittest.TestCase):
     expected = []
 
     self.assertEquals(result, expected) 
+
+  def testPut(self):
+    label = label_model.Label('Test')
+    label.put()
+
+    self.assertTrue(
+        label.storage_key in label_model.Label.instances['Label'])
+
+  def testGetAll(self):
+    label = label_model.Label('Test')
+    label.put()
+
+    result = label_model.Label.GetAll()
+    expected = [label]
+
+    self.assertEquals(result, expected)
+
+  def testGetByStorageKey(self):
+    label = label_model.Label('Test')
+    label.put()
+
+    result = label_model.Label.GetByStorageKey(label.storage_key)
+    expected = label
+
+    self.assertEquals(result, expected)
  
 if __name__ == '__main__':
   unittest.main()
