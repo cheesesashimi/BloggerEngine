@@ -48,6 +48,25 @@ class BaseModelTests(unittest.TestCase):
         self.assertEquals(
             len(instance.instances[instance.__class__.__name__]), 5)
 
+    def testDelete_InstanceExists(self):
+        base = base_model.BaseModel()
+        base.put()
+
+        self.assertEquals(len(base.instances[base.__class__.__name__]), 1)
+
+        base.delete()
+
+        self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
+
+    def testDelete_InstanceDoesNotExist(self):
+        base = base_model.BaseModel()
+
+        self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
+
+        base.delete()
+
+        self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
+
     def testGetStorageKey_NoCustomStorageKeySet(self):
         base = base_model.BaseModel()
         result = base.GetStorageKey_()

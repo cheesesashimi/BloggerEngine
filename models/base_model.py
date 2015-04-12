@@ -21,6 +21,12 @@ class BaseModel(object):
         if storage_key not in self.instances[self.__class__.__name__]:
             self.instances[self.__class__.__name__][storage_key] = self
 
+    def delete(self):
+        """Deletes the object from the instances dictionary, if present."""
+        storage_key = self.GetStorageKey_()
+        if storage_key in self.instances[self.__class__.__name__]:
+            del self.instances[self.__class__.__name__][storage_key]
+
     def GetStorageKey_(self):
         """Gets the storage key to use.
 
