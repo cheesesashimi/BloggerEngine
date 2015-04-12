@@ -46,7 +46,7 @@ class LabelTest(unittest.TestCase):
 
         self.assertEquals(len(label.blogposts), 1)
         self.assertTrue(self.blogpost.AddLabel.called)
-        self.assertEquals(self.blogpost.AddLabel.call_count, 2)
+        self.assertEquals(self.blogpost.AddLabel.call_count, 1)
 
     def testRemoveFromBlogpost_LabelPresent(self):
         label = label_model.Label('Test')
@@ -54,26 +54,19 @@ class LabelTest(unittest.TestCase):
 
         label.AddToBlogpost(self.blogpost)
 
-        self.assertTrue(self.blogpost.id in label.blogposts)
-
         label.RemoveFromBlogpost(self.blogpost)
         
         self.assertTrue(self.blogpost.id not in label.blogposts)
-
         self.assertTrue(self.blogpost.RemoveLabel.called)
  
     def testRemoveFromBlogpost_LabelNotPresent(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
-        self.assertTrue(self.blogpost.id not in label.blogposts)
-
         label.RemoveFromBlogpost(self.blogpost)
         
         self.assertTrue(self.blogpost.id not in label.blogposts)
-
-        self.assertTrue(self.blogpost.RemoveLabel.called)
-  
+        self.assertFalse(self.blogpost.RemoveLabel.called)
 
     def testGetBlogposts_WithPosts(self):
         label = label_model.Label('Test')

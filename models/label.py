@@ -27,7 +27,7 @@ class Label(base_model.BaseModel):
         """
         if blogpost.id not in self.blogposts:
             self.blogposts[blogpost.id] = blogpost
-        blogpost.AddLabel(self)
+            blogpost.AddLabel(self)
 
     def RemoveFromBlogpost(self, blogpost):
         """Removes this label from a given blogpost.
@@ -37,7 +37,7 @@ class Label(base_model.BaseModel):
         """
         if blogpost.id in self.blogposts:
             del self.blogposts[blogpost.id]
-        blogpost.RemoveLabel(self)
+            blogpost.RemoveLabel(self)
 
     def GetBlogposts(self):
         """Gets all blogposts with this label.
