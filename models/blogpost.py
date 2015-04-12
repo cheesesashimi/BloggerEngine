@@ -46,6 +46,7 @@ class Blogpost(base_model.BaseModel):
 
         """
         if label.label not in self.labels:
+            label.AddToBlogpost(self)
             self.labels[label.label] = label
 
     def RemoveLabel(self, label):
@@ -56,6 +57,7 @@ class Blogpost(base_model.BaseModel):
 
         """
         if label.label in self.labels:
+            label.RemoveFromBlogpost(self)
             del self.labels[label.label]
 
     def GetComments(self):

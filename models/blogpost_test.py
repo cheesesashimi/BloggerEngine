@@ -83,6 +83,7 @@ class BlogpostTests(unittest.TestCase):
         blogpost.AddLabel(self.label)
 
         self.assertTrue(self.label.label in blogpost.labels)
+        self.assertTrue(self.label.AddToBlogpost.called)
 
     def testAddLabel_MultipleLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
@@ -91,6 +92,7 @@ class BlogpostTests(unittest.TestCase):
         for label in self.GenerateLabels():
             blogpost.AddLabel(label)
             self.assertTrue(label.label in blogpost.labels)
+            self.assertTrue(label.AddToBlogpost.called)
 
         self.assertEquals(len(blogpost.labels), 5)
 
@@ -103,8 +105,9 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.label.label in blogpost.labels)
 
         blogpost.RemoveLabel(self.label)
-
+        
         self.assertTrue(self.label.label not in blogpost.labels)
+        self.assertTrue(self.label.RemoveFromBlogpost.called)
 
     def testRemoveLabel_LabelNotFound(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
