@@ -18,12 +18,12 @@ class LabelTest(unittest.TestCase):
     def tearDown(self):
         del self.blogpost
 
-    def testConstructor(self):
+    def test_Constructor(self):
         label = label_model.Label('Test')
         self.assertEquals(label.label, 'test')
         self.assertIsInstance(label.blogposts, OrderedDict)
 
-    def testAddToBlogpost_NewPost(self):
+    def test_AddToBlogpost_NewPost(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
@@ -35,7 +35,7 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.AddLabel.called)
         self.assertEquals(self.blogpost.AddLabel.call_count, 1)
 
-    def testAddToBlogpost_AlreadyAdded(self):
+    def test_AddToBlogpost_AlreadyAdded(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
@@ -48,7 +48,7 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.AddLabel.called)
         self.assertEquals(self.blogpost.AddLabel.call_count, 1)
 
-    def testRemoveFromBlogpost_LabelPresent(self):
+    def test_RemoveFromBlogpost_LabelPresent(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
@@ -59,7 +59,7 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.id not in label.blogposts)
         self.assertTrue(self.blogpost.RemoveLabel.called)
 
-    def testRemoveFromBlogpost_LabelNotPresent(self):
+    def test_RemoveFromBlogpost_LabelNotPresent(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
@@ -68,7 +68,7 @@ class LabelTest(unittest.TestCase):
         self.assertTrue(self.blogpost.id not in label.blogposts)
         self.assertFalse(self.blogpost.RemoveLabel.called)
 
-    def testGetBlogposts_WithPosts(self):
+    def test_GetBlogposts_WithPosts(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
@@ -80,7 +80,7 @@ class LabelTest(unittest.TestCase):
         self.assertEquals(result, expected)
         self.assertEquals(result[0].id, self.blogpost.id)
 
-    def testGetBlogposts_NoPosts(self):
+    def test_GetBlogposts_NoPosts(self):
         label = label_model.Label('Test')
 
         result = label.GetBlogposts()
@@ -88,14 +88,14 @@ class LabelTest(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testPut(self):
+    def test_Put(self):
         label = label_model.Label('Test')
         label.put()
 
         self.assertTrue(
             label.storage_key in label_model.Label.instances['Label'])
 
-    def testGetAll(self):
+    def test_GetAll(self):
         label = label_model.Label('Test')
         label.put()
 
@@ -104,7 +104,7 @@ class LabelTest(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetByStorageKey(self):
+    def test_GetByStorageKey(self):
         label = label_model.Label('Test')
         label.put()
 

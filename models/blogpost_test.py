@@ -28,7 +28,7 @@ class BlogpostTests(unittest.TestCase):
         del self.headline
         del self.body
 
-    def testConstructor(self):
+    def test_Constructor(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
 
@@ -40,14 +40,14 @@ class BlogpostTests(unittest.TestCase):
         self.assertIsNotNone(blogpost.created_timestamp)
         self.assertIsNotNone(blogpost.id)
 
-    def testAddComment(self):
+    def test_AddComment(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.AddComment(self.comment)
 
         self.assertTrue(self.comment.id in blogpost.comments)
 
-    def testRemoveComment_CommentFound(self):
+    def test_RemoveComment_CommentFound(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.AddComment(self.comment)
@@ -58,7 +58,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertTrue(self.comment.id not in blogpost.comments)
 
-    def testRemoveComment_CommentNotFound(self):
+    def test_RemoveComment_CommentNotFound(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
 
@@ -68,7 +68,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertTrue(self.comment.id not in blogpost.comments)
 
-    def testAddComment_MultipleComments(self):
+    def test_AddComment_MultipleComments(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         for comment in self.GenerateComments():
@@ -77,7 +77,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertEquals(len(blogpost.comments), 5)
 
-    def testAddLabel(self):
+    def test_AddLabel(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.AddLabel(self.label)
@@ -85,7 +85,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.label.label in blogpost.labels)
         self.assertTrue(self.label.AddToBlogpost.called)
 
-    def testAddLabel_MultipleLabels(self):
+    def test_AddLabel_MultipleLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
 
@@ -96,7 +96,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertEquals(len(blogpost.labels), 5)
 
-    def testRemoveLabel_LabelFound(self):
+    def test_RemoveLabel_LabelFound(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
 
@@ -109,7 +109,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.label.label not in blogpost.labels)
         self.assertTrue(self.label.RemoveFromBlogpost.called)
 
-    def testRemoveLabel_LabelNotFound(self):
+    def test_RemoveLabel_LabelNotFound(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
 
@@ -119,7 +119,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertTrue(self.label.label not in blogpost.labels)
 
-    def testGetComments_WithComments(self):
+    def test_GetComments_WithComments(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.AddComment(self.comment)
@@ -129,7 +129,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetComments_NoComments(self):
+    def test_GetComments_NoComments(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         result = blogpost.GetComments()
@@ -137,14 +137,14 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetLabels_NoLabels(self):
+    def test_GetLabels_NoLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         result = blogpost.GetLabels()
         expected = []
         self.assertEquals(result, expected)
 
-    def testGetLabels_WithLabels(self):
+    def test_GetLabels_WithLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.AddLabel(self.label)
@@ -152,7 +152,7 @@ class BlogpostTests(unittest.TestCase):
         expected = [self.label]
         self.assertEquals(result, expected)
 
-    def testPut(self):
+    def test_Put(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.put()
@@ -162,7 +162,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertEquals(len(blogpost_model.Blogpost.instances['Blogpost']),
                           1)
 
-    def testGetAll(self):
+    def test_GetAll(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.put()
@@ -172,7 +172,7 @@ class BlogpostTests(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetByStorageKey(self):
+    def test_GetByStorageKey(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
         blogpost.put()

@@ -21,7 +21,7 @@ class CommentTest(unittest.TestCase):
         del self.blogpost
         del self.comment_text
 
-    def testConstructor(self):
+    def test_Constructor(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
         self.assertTrue(self.author.AddComment.called)
@@ -30,7 +30,7 @@ class CommentTest(unittest.TestCase):
         self.assertIsNotNone(comment.created_timestamp)
         self.assertIsNotNone(comment.id)
 
-    def testRemoveFromBlogpost(self):
+    def test_RemoveFromBlogpost(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
         comment.RemoveFromBlogpost()
@@ -39,7 +39,7 @@ class CommentTest(unittest.TestCase):
         self.assertTrue(self.author.AddComment.called)
         self.assertTrue(self.blogpost.RemoveComment.called)
 
-    def testPut(self):
+    def test_Put(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
         comment.put()
@@ -47,7 +47,7 @@ class CommentTest(unittest.TestCase):
         self.assertTrue(
             comment.id in comment_model.Comment.instances['Comment'])
 
-    def testGetAll(self):
+    def test_GetAll(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
         comment.put()
@@ -57,7 +57,7 @@ class CommentTest(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetByStorageKey(self):
+    def test_GetByStorageKey(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
         comment.put()

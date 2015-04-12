@@ -94,7 +94,7 @@ class BloggerEngineTest(unittest.TestCase):
         del self.comments
         del self.labels
 
-    def testSubmitBlogpost(self):
+    def test_SubmitBlogpost(self):
         result = self.blogger_engine.SubmitBlogpost(self.username,
                                                     self.headline,
                                                     self.body)
@@ -108,7 +108,7 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertEquals(
             len(blogpost_model.Blogpost.instances['Blogpost']), 4)
 
-    def testAddLabelToBlogpost_BlogpostFound(self):
+    def test_AddLabelToBlogpost_BlogpostFound(self):
         blogpost = self.blogger_engine.SubmitBlogpost(self.username,
                                                       self.headline,
                                                       self.body)
@@ -121,14 +121,14 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertEquals(len(label_model.Label.instances['Label']), 4)
 
-    def testAddLabelToBlogpost_BlogpostNotFound(self):
+    def test_AddLabelToBlogpost_BlogpostNotFound(self):
         result = self.blogger_engine.AddLabelToBlogpost(
             self.label_text,
             '12345')
 
         self.assertIsNone(result)
 
-    def testRemoveLabelFromBlogpost_BlogpostAndLabelFound(self):
+    def test_RemoveLabelFromBlogpost_BlogpostAndLabelFound(self):
         blogpost = self.blogposts[0]
         label = self.labels[0]
         result = self.blogger_engine.RemoveLabelFromBlogpost(label.label,
@@ -139,21 +139,21 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertEquals(result[0], label)
         self.assertEquals(result[1], blogpost)
 
-    def testRemoveLabelFromBlogpost_BlogpostNotFound(self):
+    def test_RemoveLabelFromBlogpost_BlogpostNotFound(self):
         label = self.labels[0]
         blogpost_id = '12345'
         result = self.blogger_engine.RemoveLabelFromBlogpost(label.label,
                                                              blogpost_id)
         self.assertIsNone(result)
 
-    def testRemoveLabelFromBlogpost_LabelNotFound(self):
+    def test_RemoveLabelFromBlogpost_LabelNotFound(self):
         blogpost = self.blogposts[0]
         label = 'notfound'
         result = self.blogger_engine.RemoveLabelFromBlogpost(label,
                                                              blogpost.id)
         self.assertIsNone(result)
 
-    def testDeleteLabel_LabelFound(self):
+    def test_DeleteLabel_LabelFound(self):
         label = self.labels[2]
         result = self.blogger_engine.DeleteLabel(label.label)
 
@@ -166,12 +166,12 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertEquals(result, label)
         self.assertEquals(label.GetBlogposts(), [])
 
-    def testDeleteLabel_LabelFound(self):
+    def test_DeleteLabel_LabelFound(self):
         label = 'notfound'
         result = self.blogger_engine.DeleteLabel(label)
         self.assertIsNone(result)
 
-    def testDeleteBlogpost_BlogpostFound(self):
+    def test_DeleteBlogpost_BlogpostFound(self):
         author = self.authors[0]
         blogpost = self.blogposts[0]
         label1 = self.labels[0]
@@ -194,14 +194,14 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertTrue(
             blogpost.id not in blogpost_model.Blogpost.instances['Blogpost'])
 
-    def testDeleteBlogpost_BlogpostNotFound(self):
+    def test_DeleteBlogpost_BlogpostNotFound(self):
         blogpost_id = '12345'
 
         result = self.blogger_engine.DeleteBlogpost(blogpost_id)
 
         self.assertIsNone(result)
 
-    def testSubmitComment_BlogpostFound(self):
+    def test_SubmitComment_BlogpostFound(self):
         blogpost = self.blogger_engine.SubmitBlogpost(self.username,
                                                       self.headline,
                                                       self.body)
@@ -218,7 +218,7 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertIsInstance(result.author, author_model.Author)
         self.assertEquals(result.author.username, comment_author)
 
-    def testSubmitComment_BlogpostNotFound(self):
+    def test_SubmitComment_BlogpostNotFound(self):
         comment_author = 'colin'
         comment_text = 'Anything but the caps lock!'
         blogpost_id = '12345'
@@ -229,7 +229,7 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertIsNone(result)
 
-    def testRemoveCommentFromBlogpost_CommentFound(self):
+    def test_RemoveCommentFromBlogpost_CommentFound(self):
         comment = self.comments[0]
         blogpost = comment.blogpost
 
@@ -240,22 +240,22 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertTrue(comment.id not in comment.author.comments)
         self.assertTrue(comment.id in comment.author.removed_comments)
 
-    def testRemoveCommentFromBlogpost_CommentNotFound(self):
+    def test_RemoveCommentFromBlogpost_CommentNotFound(self):
         comment_id = '12345'
         result = self.blogger_engine.RemoveCommentFromBlogpost(comment_id)
         self.assertIsNone(result)
 
-    def testGetCommentsByUsername_UserFound(self):
+    def test_GetCommentsByUsername_UserFound(self):
         result = self.blogger_engine.GetCommentsByUsername('colin')
         expected = [self.comments[0], self.comments[1]]
 
         self.assertEquals(result, expected)
 
-    def testGetCommentsByUsername_UserNotFound(self):
+    def test_GetCommentsByUsername_UserNotFound(self):
         result = self.blogger_engine.GetCommentsByUsername('steve')
         self.assertIsNone(result)
 
-    def testGetCommentsByUsername_UserFoundNoComments(self):
+    def test_GetCommentsByUsername_UserFoundNoComments(self):
         author_without_comments = author_model.Author('jon')
         author_without_comments.put()
 
@@ -264,16 +264,16 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetBlogpostsByUsername_UsernameFound(self):
+    def test_GetBlogpostsByUsername_UsernameFound(self):
         result = self.blogger_engine.GetBlogpostsByUsername('colin')
         expected = [self.blogposts[2]]
         self.assertEquals(result, expected)
 
-    def testGetBlogpostsByUsername_UsernameNotFound(self):
+    def test_GetBlogpostsByUsername_UsernameNotFound(self):
         result = self.blogger_engine.GetBlogpostsByUsername('steve')
         self.assertIsNone(result)
 
-    def testGetBlogpostsByUsername_UsernameFoundNoPosts(self):
+    def test_GetBlogpostsByUsername_UsernameFoundNoPosts(self):
         author_without_posts = author_model.Author('jon')
         author_without_posts.put()
 
@@ -281,17 +281,17 @@ class BloggerEngineTest(unittest.TestCase):
         expected = []
         self.assertEquals(result, expected)
 
-    def testGetBlogpostById_BlogpostIdFound(self):
+    def test_GetBlogpostById_BlogpostIdFound(self):
         for blogpost in self.blogposts:
             result = self.blogger_engine.GetBlogpostById(blogpost.id)
             expected = blogpost
             self.assertEquals(result, expected)
 
-    def testGetBlogpostById_NoBlogpostFound(self):
+    def test_GetBlogpostById_NoBlogpostFound(self):
         result = self.blogger_engine.GetBlogpostById('12345')
         self.assertIsNone(result)
 
-    def testGetBlogpostsByLabel_LabelExists(self):
+    def test_GetBlogpostsByLabel_LabelExists(self):
         result = self.blogger_engine.GetBlogpostsByLabel('funny')
         expected = [self.blogposts[1]]
         self.assertEquals(result, expected)
@@ -304,79 +304,79 @@ class BloggerEngineTest(unittest.TestCase):
         expected = self.blogposts
         self.assertEquals(result, expected)
 
-    def testGetBlogpostsByLabel_LabelDoesNotExist(self):
+    def test_GetBlogpostsByLabel_LabelDoesNotExist(self):
         result = self.blogger_engine.GetBlogpostsByLabel('nothing')
         self.assertIsNone(result)
 
-    def testGetOrInsertAuthor_AuthorFound(self):
+    def test_GetOrInsertAuthor_AuthorFound(self):
         result = self.blogger_engine.GetOrInsertAuthor_('zack')
         expected = self.authors[1]
         self.assertEquals(result, expected)
         self.assertEquals(len(author_model.Author.instances['Author']), 2)
 
-    def testGetOrInsertAuthor_AuthorNotFound(self):
+    def test_GetOrInsertAuthor_AuthorNotFound(self):
         result = self.blogger_engine.GetOrInsertAuthor_('jon')
         self.assertEquals(result.username, 'jon')
         self.assertIsInstance(result, author_model.Author)
         self.assertEquals(len(author_model.Author.instances['Author']), 3)
 
-    def testGetAuthorByUsername_AuthorFound(self):
+    def test_GetAuthorByUsername_AuthorFound(self):
         result = self.blogger_engine.GetAuthorByUsername('zack')
         expected = self.authors[1]
         self.assertEquals(result, expected)
 
-    def testGetAuthorByUsername_AuthorNotFound(self):
+    def test_GetAuthorByUsername_AuthorNotFound(self):
         result = self.blogger_engine.GetAuthorByUsername('steve')
         self.assertIsNone(result)
 
-    def testGetAllBlogposts(self):
+    def test_GetAllBlogposts(self):
         result = self.blogger_engine.GetAllBlogposts()
         expected = self.blogposts
         self.assertEquals(result, expected)
 
-    def testGetCommentsByBlogpost_BlogpostFound(self):
+    def test_GetCommentsByBlogpost_BlogpostFound(self):
         blogpost_id = self.blogposts[0].id
         result = self.blogger_engine.GetCommentsByBlogpost(blogpost_id)
         expected = [self.comments[0]]
         self.assertEquals(result, expected)
 
-    def testGetCommentsByBlogpost_BlogpostNotFound(self):
+    def test_GetCommentsByBlogpost_BlogpostNotFound(self):
         blogpost_id = '12345'
         result = self.blogger_engine.GetCommentsByBlogpost(blogpost_id)
         self.assertIsNone(result)
 
-    def testGetCommentsOnBlogpostFilteredByUser_BlogpostFound(self):
+    def test_GetCommentsOnBlogpostFilteredByUser_BlogpostFound(self):
         blogpost_id = self.blogposts[0].id
         result = self.blogger_engine.GetCommentsOnBlogpostFilteredByUser(
             'colin', blogpost_id)
         expected = [self.comments[0]]
         self.assertEquals(result, expected)
 
-    def testGetCommentsOnBlogpostFilteredByUser_NoCommentsForUser(self):
+    def test_GetCommentsOnBlogpostFilteredByUser_NoCommentsForUser(self):
         blogpost_id = self.blogposts[0].id
         result = self.blogger_engine.GetCommentsOnBlogpostFilteredByUser(
             'zack', blogpost_id)
         expected = []
         self.assertEquals(result, expected)
 
-    def testGetCommentsOnBlogpostFilteredByUser_BlogpostNotFound(self):
+    def test_GetCommentsOnBlogpostFilteredByUser_BlogpostNotFound(self):
         blogpost_id = '12345'
         result = self.blogger_engine.GetCommentsOnBlogpostFilteredByUser(
             'colin', blogpost_id)
         self.assertIsNone(result)
 
-    def testGetLabelsByBlogpost_BlogpostFound(self):
+    def test_GetLabelsByBlogpost_BlogpostFound(self):
         blogpost_id = self.blogposts[0].id
         result = self.blogger_engine.GetLabelsByBlogpost(blogpost_id)
         expected = [self.labels[0], self.labels[2]]
         self.assertEquals(result, expected)
 
-    def testGetLabelsByBlogpost_BlogpostNotFound(self):
+    def test_GetLabelsByBlogpost_BlogpostNotFound(self):
         blogpost_id = '12345'
         result = self.blogger_engine.GetLabelsByBlogpost(blogpost_id)
         self.assertIsNone(result)
 
-    def testGetLabelsByBlogpost_BlogpostHasNoLabels(self):
+    def test_GetLabelsByBlogpost_BlogpostHasNoLabels(self):
         blogpost = blogpost_model.Blogpost(self.authors[0],
                                            'Garbage Day...',
                                            '...is a very dangerous day.')

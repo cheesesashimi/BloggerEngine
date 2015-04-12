@@ -14,7 +14,7 @@ class BaseModelTests(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testConstructor(self):
+    def test_Constructor(self):
         base = base_model.BaseModel()
         self.assertIsNotNone(base.id)
         self.assertIsNotNone(base.created_timestamp)
@@ -22,14 +22,14 @@ class BaseModelTests(unittest.TestCase):
         self.assertIsInstance(base.instances.get(base.__class__.__name__),
                               OrderedDict)
 
-    def testPut_NewInstance(self):
+    def test_Put_NewInstance(self):
         base = base_model.BaseModel()
         base.put()
 
         self.assertEquals(base,
                           base.instances[base.__class__.__name__][base.id])
 
-    def testPut_ExistingInstance(self):
+    def test_Put_ExistingInstance(self):
         base = base_model.BaseModel()
         base.put()
         base.put()
@@ -39,7 +39,7 @@ class BaseModelTests(unittest.TestCase):
         self.assertTrue(base.id in base.instances[base.__class__.__name__])
         self.assertEquals(len(base.instances[base.__class__.__name__]), 1)
 
-    def testPut_MultipleInstances(self):
+    def test_Put_MultipleInstances(self):
         for instance in self.GenerateBaseModelInstances():
             instance.put()
             self.assertTrue(
@@ -48,7 +48,7 @@ class BaseModelTests(unittest.TestCase):
         self.assertEquals(
             len(instance.instances[instance.__class__.__name__]), 5)
 
-    def testDelete_InstanceExists(self):
+    def test_Delete_InstanceExists(self):
         base = base_model.BaseModel()
         base.put()
 
@@ -58,7 +58,7 @@ class BaseModelTests(unittest.TestCase):
 
         self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
 
-    def testDelete_InstanceDoesNotExist(self):
+    def test_Delete_InstanceDoesNotExist(self):
         base = base_model.BaseModel()
 
         self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
@@ -67,14 +67,14 @@ class BaseModelTests(unittest.TestCase):
 
         self.assertEquals(len(base.instances[base.__class__.__name__]), 0)
 
-    def testGetStorageKey_NoCustomStorageKeySet(self):
+    def test_GetStorageKey_NoCustomStorageKeySet(self):
         base = base_model.BaseModel()
         result = base.GetStorageKey_()
         expected = base.id
 
         self.assertEquals(result, expected)
 
-    def testGetStorageKey_CustomStorageKeySet(self):
+    def test_GetStorageKey_CustomStorageKeySet(self):
         class ChildClass(base_model.BaseModel):
 
             def __init__(self):
@@ -87,21 +87,21 @@ class BaseModelTests(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetAll_ObjectsNotInstantiatedNorStored(self):
+    def test_GetAll_ObjectsNotInstantiatedNorStored(self):
         result = base_model.BaseModel.GetAll()
         expected = []
         self.assertEquals(result, expected)
 
-    def testGetAll_ObjectsInstantiatedButNotStored(self):
+    def test_GetAll_ObjectsInstantiatedButNotStored(self):
         base = base_model.BaseModel()
         expected = []
         result = base_model.BaseModel.GetAll()
         self.assertEquals(result, expected)
 
-    def testGetAll_ObjectsStored(self):
+    def test_GetAll_ObjectsStored(self):
         base_instances = list(self.GenerateBaseModelInstances())
 
-    def testGetByStorageKey_StorageKeyFound(self):
+    def test_GetByStorageKey_StorageKeyFound(self):
         base = base_model.BaseModel()
         base.put()
 
@@ -110,11 +110,11 @@ class BaseModelTests(unittest.TestCase):
 
         self.assertEquals(result, expected)
 
-    def testGetByStorageKey_StorageKeyNotFoundObjectNotInstantiated(self):
+    def test_GetByStorageKey_StorageKeyNotFoundObjectNotInstantiated(self):
         result = base_model.BaseModel.GetByStorageKey('unseen_storage_key')
         self.assertIsNone(result)
 
-    def testGetByStorageKey_StorageKeyNotFoundObjectInstantiated(self):
+    def test_GetByStorageKey_StorageKeyNotFoundObjectInstantiated(self):
         base_model.BaseModel()
         result = base_model.BaseModel.GetByStorageKey('unseen_storage_key')
         self.assertIsNone(result)
