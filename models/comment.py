@@ -22,3 +22,9 @@ class Comment(base_model.BaseModel):
         self.author = author
         self.blogpost = blogpost
         self.comment_text = comment_text
+
+    def RemoveFromBlogpost(self):
+        """Removes this comment from the attached blogpost."""
+        self.author.RemoveComment(self)
+        self.blogpost.RemoveComment(self)
+        self.blogpost = None

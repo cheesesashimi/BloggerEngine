@@ -30,6 +30,15 @@ class CommentTest(unittest.TestCase):
         self.assertIsNotNone(comment.created_timestamp)
         self.assertIsNotNone(comment.id)
 
+    def testRemoveFromBlogpost(self):
+        comment = comment_model.Comment(self.author, self.blogpost,
+                                        self.comment_text)
+        comment.RemoveFromBlogpost()
+
+        self.assertIsNone(comment.blogpost)
+        self.assertTrue(self.author.AddComment.called)
+        self.assertTrue(self.blogpost.RemoveComment.called)
+
     def testPut(self):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
