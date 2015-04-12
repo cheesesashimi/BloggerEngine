@@ -63,6 +63,7 @@ class AuthorTests(unittest.TestCase):
         author.RemoveBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id not in author.blogposts)
+        self.assertTrue(self.blogpost.id in author.removed_blogposts)
 
     def testRemoveBlogpost_PostDoesNotExist(self):
         author = author_model.Author(self.username)
@@ -72,6 +73,7 @@ class AuthorTests(unittest.TestCase):
         author.RemoveBlogpost(self.blogpost)
 
         self.assertTrue(self.blogpost.id not in author.blogposts)
+        self.assertTrue(self.blogpost.id not in author.removed_blogposts)
 
     def testAddComment_NewComment(self):
         author = author_model.Author(self.username)

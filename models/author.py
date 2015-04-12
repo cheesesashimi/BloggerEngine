@@ -18,6 +18,8 @@ class Author(base_model.BaseModel):
         self.username = username
         self.comments = OrderedDict()
         self.blogposts = OrderedDict()
+        self.removed_blogposts = OrderedDict()
+        self.removed_comments = OrderedDict()
 
     def AddBlogpost(self, blogpost):
         """Adds a blogpost to the author's dictionary of blogposts.
@@ -29,6 +31,16 @@ class Author(base_model.BaseModel):
         if blogpost.id not in self.blogposts:
             self.blogposts[blogpost.id] = blogpost
 
+    def RemoveBlogpost(self, blogpost):
+        """Removes a blogpost from the author's dictionary of blogposts.
+
+        Args:
+          blogpost: Blogpsot; the blogpost to remove.
+        """
+        if blogpost.id in self.blogposts:
+            self.removed_blogposts[blogpost.id] = blogpost
+            del self.blogposts[blogpost.id]
+
     def AddComment(self, comment):
         """Adds a comment to the author's dictionary of comments.
 
@@ -39,15 +51,6 @@ class Author(base_model.BaseModel):
         if comment.id not in self.comments:
             self.comments[comment.id] = comment
 
-    def RemoveBlogpost(self, blogpost):
-        """Removes a blogpost from the author's dictionary of blogposts.
-
-        Args:
-          blogpost: Blogpsot; the blogpost to remove.
-        """
-        if blogpost.id in self.blogposts:
-            del self.blogposts[blogpost.id]
-
     def RemoveComment(self, comment):
         """Removes a comment from the author's dictionary of blogposts.
 
@@ -55,6 +58,7 @@ class Author(base_model.BaseModel):
           comment: Comment; the comment to remove.
         """
         if comment.id in self.comments:
+            self.removed_comments[comment.id] = comment
             del self.comments[comment.id]
 
     def GetBlogposts(self):
