@@ -189,6 +189,66 @@ class BloggerEngine(object):
         """
         return author_model.Author.GetByStorageKey(username)
 
+    def RemoveLabelFromBlogpost(self, label_text, blogpost_id):
+        """Removes a label from a given blogpost.
+
+        Args:
+          label_text: string; The label to remove.
+          blogpost_id: string; The blogpost to remove the label from.
+        """
+        label = label_model.Label.GetByStorageKey(label_text)
+        blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
+        if label and blogpost:
+            label.RemoveFromBlogpost(blogpost)
+            blogpost.RemoveLabel(label)
+            return (label, blogpost)
+
+    def RemoveCommentFromBlogpost(self, comment_id):
+        """Removes a given comment from a blogpost.
+
+        Args:
+          comment_id: string; The comment ID to remove.
+        """
+        comment = comment_model.Comment.GetByStorageKey(comment_id)
+        if not comment:
+            return None
+
+        comment.RemoveFromBlogpost()
+        return comment
+
+    def DeleteLabel(self, label_text):
+        """Removes a label from all blogposts and deletes it.
+
+        Args:
+          label_text: string; The label to delete.
+        """
+        label = label_model.Label.GetByStorageKey(label_text)
+        if not label:
+            return None
+
+        for blogpost in label.GetBlogposts():
+            blogpost.RemoveLabel(label)
+            label.RemoveFromBlogpost(blogpost)
+
+        label.delete()
+        return label
+
+    def DeleteBlogpost(self, blogpost_id):
+        """Removes a blogpost from the datastore and associated comments."""
+        blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
+        if not blogpost:
+            return None
+
+        blogpost.author.RemoveBlogpost(blogpost)
+        for comment in blogpost.GetComments():
+            comment.RemoveFromBlogpost()
+
+        for label in blogpost.GetLabels():
+            label.RemoveFromBlogpost(blogpost)
+
+        blogpost.delete()
+        return blogpost
+
     def GetOrInsertAuthor_(self, username):
         """Gets or inserts an Author object by username.
 

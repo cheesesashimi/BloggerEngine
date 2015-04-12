@@ -37,6 +37,7 @@ class Blogpost(base_model.BaseModel):
         """
         if comment.id in self.comments:
             del self.comments[comment.id]
+            comment.RemoveFromBlogpost()
 
     def AddLabel(self, label):
         """Adds a label to this blog post.
@@ -57,8 +58,8 @@ class Blogpost(base_model.BaseModel):
 
         """
         if label.label in self.labels:
-            label.RemoveFromBlogpost(self)
             del self.labels[label.label]
+            label.RemoveFromBlogpost(self)
 
     def GetComments(self):
         """Gets all the comments associated with this blog post.

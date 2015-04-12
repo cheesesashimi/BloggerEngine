@@ -128,6 +128,79 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertIsNone(result)
 
+    def testRemoveLabelFromBlogpost_BlogpostAndLabelFound(self):
+        blogpost = self.blogposts[0]
+        label = self.labels[0]
+        result = self.blogger_engine.RemoveLabelFromBlogpost(label.label,
+                                                             blogpost.id)
+
+        self.assertTrue(label.label not in blogpost.labels)
+        self.assertTrue(blogpost.id not in label.blogposts)
+        self.assertEquals(result[0], label)
+        self.assertEquals(result[1], blogpost)
+
+    def testRemoveLabelFromBlogpost_BlogpostNotFound(self):
+        label = self.labels[0]
+        blogpost_id = '12345'
+        result = self.blogger_engine.RemoveLabelFromBlogpost(label.label,
+                                                             blogpost_id)
+        self.assertIsNone(result)
+
+    def testRemoveLabelFromBlogpost_LabelNotFound(self):
+        blogpost = self.blogposts[0]
+        label = 'notfound'
+        result = self.blogger_engine.RemoveLabelFromBlogpost(label,
+                                                             blogpost.id)
+        self.assertIsNone(result)
+
+    def testDeleteLabel_LabelFound(self):
+        label = self.labels[2]
+        result = self.blogger_engine.DeleteLabel(label.label)
+
+        for blogpost in self.blogposts:
+            self.assertTrue(label.label not in blogpost.labels)
+
+        self.assertTrue(
+            label.label not in label_model.Label.instances['Label'])
+
+        self.assertEquals(result, label)
+        self.assertEquals(label.GetBlogposts(), [])
+
+    def testDeleteLabel_LabelFound(self):
+        label = 'notfound'
+        result = self.blogger_engine.DeleteLabel(label)
+        self.assertIsNone(result)
+
+    def testDeleteBlogpost_BlogpostFound(self):
+        author = self.authors[0]
+        blogpost = self.blogposts[0]
+        label1 = self.labels[0]
+        label3 = self.labels[2]
+        comment = self.comments[0]
+
+        result = self.blogger_engine.DeleteBlogpost(blogpost.id)
+
+        self.assertEquals(result, blogpost)
+
+        self.assertTrue(blogpost.id not in label1.blogposts)
+        self.assertTrue(blogpost.id not in label3.blogposts)
+        self.assertIsNone(comment.blogpost)
+
+        self.assertTrue(blogpost.id not in author.blogposts)
+        self.assertTrue(blogpost.id not in author.removed_blogposts)
+        self.assertTrue(comment.id not in comment.author.comments)
+        self.assertTrue(comment.id in comment.author.removed_comments) 
+
+        self.assertTrue(
+            blogpost.id not in blogpost_model.Blogpost.instances['Blogpost'])
+
+    def testDeleteBlogpost_BlogpostNotFound(self):
+        blogpost_id = '12345'
+
+        result = self.blogger_engine.DeleteBlogpost(blogpost_id)
+
+        self.assertIsNone(result)
+
     def testSubmitComment_BlogpostFound(self):
         blogpost = self.blogger_engine.SubmitBlogpost(self.username,
                                                       self.headline,
@@ -154,6 +227,22 @@ class BloggerEngineTest(unittest.TestCase):
                                                    comment_text,
                                                    blogpost_id)
 
+        self.assertIsNone(result)
+
+    def testRemoveCommentFromBlogpost_CommentFound(self):
+        comment = self.comments[0]
+        blogpost = comment.blogpost
+
+        result = self.blogger_engine.RemoveCommentFromBlogpost(comment.id)
+        self.assertEquals(comment, result)
+        self.assertIsNone(comment.blogpost)
+        self.assertTrue(comment.id not in blogpost.comments)
+        self.assertTrue(comment.id not in comment.author.comments)
+        self.assertTrue(comment.id in comment.author.removed_comments)
+
+    def testRemoveCommentFromBlogpost_CommentNotFound(self):
+        comment_id = '12345'
+        result = self.blogger_engine.RemoveCommentFromBlogpost(comment_id)
         self.assertIsNone(result)
 
     def testGetCommentsByUsername_UserFound(self):
