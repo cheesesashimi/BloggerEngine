@@ -34,6 +34,7 @@ class Label(base_model.BaseModel):
 
         Args:
           blogpost: Blogpost; The blogpost to remove this label from.
+
         """
         if blogpost.id in self.blogposts:
             del self.blogposts[blogpost.id]

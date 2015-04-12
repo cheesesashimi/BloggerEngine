@@ -34,6 +34,7 @@ class Blogpost(base_model.BaseModel):
 
         Args:
           comment: Comment; the comment to remove.
+
         """
         if comment.id in self.comments:
             del self.comments[comment.id]

@@ -55,16 +55,16 @@ class LabelTest(unittest.TestCase):
         label.AddToBlogpost(self.blogpost)
 
         label.RemoveFromBlogpost(self.blogpost)
-        
+
         self.assertTrue(self.blogpost.id not in label.blogposts)
         self.assertTrue(self.blogpost.RemoveLabel.called)
- 
+
     def testRemoveFromBlogpost_LabelNotPresent(self):
         label = label_model.Label('Test')
         self.blogpost.id = '12345'
 
         label.RemoveFromBlogpost(self.blogpost)
-        
+
         self.assertTrue(self.blogpost.id not in label.blogposts)
         self.assertFalse(self.blogpost.RemoveLabel.called)
 

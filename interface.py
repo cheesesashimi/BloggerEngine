@@ -195,6 +195,7 @@ class BloggerEngine(object):
         Args:
           label_text: string; The label to remove.
           blogpost_id: string; The blogpost to remove the label from.
+
         """
         label = label_model.Label.GetByStorageKey(label_text)
         blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
@@ -208,6 +209,7 @@ class BloggerEngine(object):
 
         Args:
           comment_id: string; The comment ID to remove.
+
         """
         comment = comment_model.Comment.GetByStorageKey(comment_id)
         if not comment:
@@ -221,6 +223,7 @@ class BloggerEngine(object):
 
         Args:
           label_text: string; The label to delete.
+
         """
         label = label_model.Label.GetByStorageKey(label_text)
         if not label:

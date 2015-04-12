@@ -55,7 +55,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.comment.id in blogpost.comments)
 
         blogpost.RemoveComment(self.comment)
-        
+
         self.assertTrue(self.comment.id not in blogpost.comments)
 
     def testRemoveComment_CommentNotFound(self):
@@ -65,7 +65,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.comment.id not in blogpost.comments)
 
         blogpost.RemoveComment(self.comment)
-        
+
         self.assertTrue(self.comment.id not in blogpost.comments)
 
     def testAddComment_MultipleComments(self):
@@ -105,7 +105,7 @@ class BlogpostTests(unittest.TestCase):
         self.assertTrue(self.label.label in blogpost.labels)
 
         blogpost.RemoveLabel(self.label)
-        
+
         self.assertTrue(self.label.label not in blogpost.labels)
         self.assertTrue(self.label.RemoveFromBlogpost.called)
 

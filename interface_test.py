@@ -189,7 +189,7 @@ class BloggerEngineTest(unittest.TestCase):
         self.assertTrue(blogpost.id not in author.blogposts)
         self.assertTrue(blogpost.id not in author.removed_blogposts)
         self.assertTrue(comment.id not in comment.author.comments)
-        self.assertTrue(comment.id in comment.author.removed_comments) 
+        self.assertTrue(comment.id in comment.author.removed_comments)
 
         self.assertTrue(
             blogpost.id not in blogpost_model.Blogpost.instances['Blogpost'])

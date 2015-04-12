@@ -35,7 +35,8 @@ class Author(base_model.BaseModel):
         """Removes a blogpost from the author's dictionary of blogposts.
 
         Args:
-          blogpost: Blogpsot; the blogpost to remove.
+          blogpost: Blogpost; the blogpost to remove.
+
         """
         if blogpost.id in self.blogposts:
             self.removed_blogposts[blogpost.id] = blogpost
@@ -56,6 +57,7 @@ class Author(base_model.BaseModel):
 
         Args:
           comment: Comment; the comment to remove.
+
         """
         if comment.id in self.comments:
             self.removed_comments[comment.id] = comment
