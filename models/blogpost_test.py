@@ -16,6 +16,7 @@ class BlogpostTests(unittest.TestCase):
     def setUp(self):
         blogpost_model.Blogpost.instances = {}
         self.author = mock.MagicMock(spec=author_model.Author)
+        self.author.id = str(id(self.author))
         self.comment = self.GenerateComments().next()
         self.label = self.GenerateLabels().next()
         self.headline = 'Hello world!'
@@ -181,6 +182,56 @@ class BlogpostTests(unittest.TestCase):
         expected = blogpost
 
         self.assertEquals(result, expected)
+
+    def test_ToJson_WithCommentsAndLabels(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+        self.author.toJson.return_value = {
+            'username': self.author,
+            'id': self.author.id
+        }
+
+        labels = list(self.GenerateLabels())
+        for label in labels:
+            blogpost.labels[label.label] = label
+
+        comments = list(self.GenerateComments())
+        for comment in comments:
+            blogpost.comments[comment.id] = comment
+
+        result = blogpost.toJson()
+
+        for label in labels:
+            self.assertTrue(label.label in result['labels'])
+
+        for comment in comments:
+            self.assertTrue(comment.id in result['comments'])
+
+        self.assertEquals(result['headline'], blogpost.headline)
+        self.assertEquals(result['body'], blogpost.body)
+        self.assertEquals(result['id'], blogpost.id)
+        self.assertEquals(result['author'], self.author.toJson.return_value)
+        self.assertEquals(result['created_timestamp'],
+                          str(blogpost.created_timestamp))
+
+    def test_ToJson_NoCommentsOrLabels(self):
+        blogpost = blogpost_model.Blogpost(self.author, self.headline,
+                                           self.body)
+        self.author.toJson.return_value = {
+            'username': self.author,
+            'id': self.author.id
+        }
+
+        result = blogpost.toJson()
+
+        self.assertEquals(result['labels'], [])
+        self.assertEquals(result['comments'], [])
+        self.assertEquals(result['headline'], blogpost.headline)
+        self.assertEquals(result['body'], blogpost.body)
+        self.assertEquals(result['id'], blogpost.id)
+        self.assertEquals(result['author'], self.author.toJson.return_value)
+        self.assertEquals(result['created_timestamp'],
+                          str(blogpost.created_timestamp))
 
     def GenerateComments(self):
         # I used a generator here since I needed to set the id property,
