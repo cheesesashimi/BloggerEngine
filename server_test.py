@@ -150,9 +150,6 @@ class ServerTest(unittest.TestCase):
 
         self.assertIsNone(response_data['author'])
 
-    def test_author_delete(self):
-        pass
-
     def test_author_get_all_blogposts_successful(self):
         post_data = {'username': 'zack'}
         response = self.app.post('/author/get_all_blogposts',
@@ -381,27 +378,66 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 400)
 
-    """Come back to this one."""
-    """
     def test_blogpost_remove_label_blogpostfound(self):
         expected_blogpost = self.blogposts[0]
         expected_label = self.labels[2]
 
         post_data = {'label_text': expected_label.label,
                      'blogpost_id': expected_blogpost.id}
-        response = self.app.post('/blogpost/add_label',
+        response = self.app.post('/blogpost/remove_label',
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
 
-        expected_label = label_model.Label.GetByStorageKey('something')
         self.assertEquals(response_data['label'], expected_label.toJson())
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.toJson())
-        self.assertTrue('something' in response_data['blogpost']['labels'])
-    """
+        self.assertTrue(expected_label.label not in
+            expected_blogpost.labels)
+        self.assertTrue(expected_blogpost.id not in 
+            expected_label.blogposts)
+    
+    def test_blogpost_remove_label_blogpostnotfound(self):
+        expected_label = self.labels[2]
+
+        post_data = {'label_text': expected_label.label,
+                     'blogpost_id': '12345'}
+
+        response = self.app.post('/blogpost/remove_label',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+
+        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertIsNone(response_data['blogpost'])
+    
+    def test_blogpost_remove_label_labelnotfound(self):
+        expected_blogpost = self.blogposts[0]
+
+        post_data = {'label_text': 'notfound', 
+                     'blogpost_id': expected_blogpost.id}
+
+        response = self.app.post('/blogpost/remove_label',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+
+        self.assertIsNone(response_data['label'])
+        self.assertEquals(response_data['blogpost'],
+                          expected_blogpost.toJson())
+
+    def test_blogpost_remove_unsuccessful(self):
+        post_data = {}
+        response = self.app.post('/blogpost/remove_label',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 400)
 
     def test_blogpost_add_comment_successful(self):
         expected_author = self.authors[0]
@@ -691,9 +727,41 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['blogposts'],
                           expected_blogposts_json)
 
-    """Come back to this one."""
-    def test_blogpost_remove(self):
-        pass
+    def test_blogpost_remove_successful(self):
+        expected_blogpost = self.blogposts[0]
+        expected_author = self.authors[1]
+
+        post_data = {'blogpost_id': expected_blogpost.id}
+        response = self.app.post('/blogpost/remove',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+        self.assertEquals(response_data['removed_blogpost'],
+                          expected_blogpost.toJson())
+        self.assertEquals(response_data['author'],
+                          response_data['removed_blogpost']['author'])
+        self.assertEquals(response_data['author'],
+                          expected_author.toJson())
+
+    def test_blogpost_remove_unsuccessful(self):
+        post_data = {}
+        response = self.app.post('/blogpost/remove',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 400)
+
+    def test_blogpost_remove_blogpostnotfound(self):
+        post_data = {'blogpost_id': '12345'}
+        response = self.app.post('/blogpost/remove',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+        self.assertIsNone(response_data['removed_blogpost'])
+        self.assertIsNone(response_data['author'])
 
     def test_blogpost_get_all_by_username_successful(self):
         post_data = {'username': 'zack'}
@@ -1071,7 +1139,66 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 400)
 
-    """add removal tests here"""
+    def test_label_remove_from_blogpost_label_blogpostfound(self):
+        expected_blogpost = self.blogposts[0]
+        expected_label = self.labels[2]
+
+        post_data = {'label_text': expected_label.label,
+                     'blogpost_id': expected_blogpost.id}
+        response = self.app.post('/label/remove_from_blogpost',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+
+        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['blogpost'],
+                          expected_blogpost.toJson())
+        self.assertTrue(expected_label.label not in
+            expected_blogpost.labels)
+        self.assertTrue(expected_blogpost.id not in 
+            expected_label.blogposts)
+    
+    def test_label_remove_from_blogpost_label_blogpostnotfound(self):
+        expected_label = self.labels[2]
+
+        post_data = {'label_text': expected_label.label,
+                     'blogpost_id': '12345'}
+
+        response = self.app.post('/label/remove_from_blogpost',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+
+        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertIsNone(response_data['blogpost'])
+    
+    def test_label_remove_from_blogpost_label_labelnotfound(self):
+        expected_blogpost = self.blogposts[0]
+
+        post_data = {'label_text': 'notfound', 
+                     'blogpost_id': expected_blogpost.id}
+
+        response = self.app.post('/label/remove_from_blogpost',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 200)
+
+        response_data = json.loads(response.data)
+
+        self.assertIsNone(response_data['label'])
+        self.assertEquals(response_data['blogpost'],
+                          expected_blogpost.toJson())
+
+    def test_label_remove_from_blogpost_unsuccessful(self):
+        post_data = {}
+        response = self.app.post('/label/remove_from_blogpost',
+                                 data=json.dumps(post_data),
+                                 content_type='application/json')
+        self.assertEquals(response.status_code, 400)
 
     def test_label_get_all_blogposts_with_label_successful(self):
         expected_label = self.labels[2]

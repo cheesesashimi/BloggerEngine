@@ -41,10 +41,6 @@ def author_get_by_username():
         'author': author
     })
 
-@app.route('/author/delete', methods=['POST'])
-def author_delete():
-    pass
-
 @app.route('/author/get_all_blogposts', methods=['POST'])
 def author_get_all_blogposts():
     content = request.get_json()
@@ -202,16 +198,30 @@ def blogpost_remove_label():
     label_text = content.get('label_text')
     blogpost_id = content.get('blogpost_id')
 
-    if not label_text and not blogpost_id:
+    if not label_text or not blogpost_id:
         abort(400)
 
-    result = blogger_engine.RemoveLabelFromBlogpost(label_text, blogpost_id)
+    blogpost = blogger_engine.GetBlogpostById(blogpost_id)
+    label = blogger_engine.GetLabel(label_text)
 
-    if result:
-        label, blogpost = result
+    if blogpost and label:
+        result = blogger_engine.RemoveLabelFromBlogpost(label_text,
+                                                        blogpost_id)
         return jsonify({
             'label': label.toJson(),
             'blogpost': blogpost.toJson()
+        })
+
+    if blogpost and not label:
+        return jsonify({
+            'label': None,
+            'blogpost': blogpost.toJson()
+        })
+
+    if label and not blogpost:
+        return jsonify({
+            'label': label.toJson(),
+            'blogpost': None
         })
 
     return jsonify({
@@ -363,7 +373,26 @@ def blogpost_get_all():
 
 @app.route('/blogpost/remove', methods=['POST'])
 def blogpost_remove():
-    pass
+    content = request.get_json()
+    blogpost_id = content.get('blogpost_id')
+
+    if not blogpost_id:
+        abort(400)
+
+    blogpost = blogger_engine.GetBlogpostById(blogpost_id)
+    if not blogpost:
+        return jsonify({
+            'removed_blogpost': None,
+            'author': None
+        })
+
+    author = blogpost.author
+    deleted_blogpost = blogger_engine.DeleteBlogpost(blogpost.id)
+    if blogpost:
+        return jsonify({
+            'removed_blogpost': blogpost.toJson(),
+            'author': author.toJson()
+        })
 
 @app.route('/blogpost/get_all_by_username', methods=['POST'])
 def blogpost_get_all_by_username():
