@@ -9,7 +9,7 @@ class BaseModel(object):
 
     def __init__(self):
         """Base model class to inherit from, to avoid duplication."""
-        self.id = id(self)
+        self.id = str(id(self))
         self.created_timestamp = datetime.datetime.utcnow()
 
         if self.__class__.__name__ not in self.instances:

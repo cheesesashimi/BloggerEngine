@@ -17,6 +17,7 @@ class BaseModelTests(unittest.TestCase):
     def test_Constructor(self):
         base = base_model.BaseModel()
         self.assertIsNotNone(base.id)
+        self.assertIsInstance(base.id, str)
         self.assertIsNotNone(base.created_timestamp)
         self.assertIsNotNone(base.instances.get(base.__class__.__name__))
         self.assertIsInstance(base.instances.get(base.__class__.__name__),
