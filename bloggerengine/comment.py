@@ -28,7 +28,7 @@ class Comment(base_model.BaseModel):
         self.author.RemoveComment(self)
         self.blogpost.RemoveComment(self)
 
-    def toJson(self):
+    def ToJson(self):
         """Converts this object into a dictionary suitable for serialization.
 
         Returns:
@@ -36,8 +36,8 @@ class Comment(base_model.BaseModel):
 
         """
         return {
-            'author': self.author.toJson(),
-            'blogpost': self.blogpost.toJson(),
+            'author': self.author.ToJson(),
+            'blogpost': self.blogpost.ToJson(),
             'created_timestamp': str(self.created_timestamp),
             'comment_text': self.comment_text,
             'id': self.id

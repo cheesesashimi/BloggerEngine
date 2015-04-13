@@ -5,11 +5,11 @@ import json
 import bloggerengine
 import server
 
-from models import author as author_model
-from models import base_model
-from models import blogpost as blogpost_model
-from models import comment as comment_model
-from models import label as label_model
+import author as author_model
+import base_model
+import blogpost as blogpost_model
+import comment as comment_model
+import label as label_model
 
 
 class ServerTest(unittest.TestCase):
@@ -130,7 +130,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        expected_author = self.authors[1].toJson()
+        expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
 
     def test_author_get_by_username_unsuccessful(self):
@@ -160,10 +160,10 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        expected_blogposts = [self.blogposts[0].toJson(),
-                              self.blogposts[1].toJson()]
+        expected_blogposts = [self.blogposts[0].ToJson(),
+                              self.blogposts[1].ToJson()]
 
-        expected_author = self.authors[1].toJson()
+        expected_author = self.authors[1].ToJson()
 
         self.assertEquals(response_data['blogposts'], expected_blogposts)
         self.assertEquals(response_data['author'], expected_author)
@@ -197,7 +197,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['author'], steve.toJson())
+        self.assertEquals(response_data['author'], steve.ToJson())
         self.assertEquals(response_data['blogposts'], [])
 
     def test_author_get_all_comments_successful(self):
@@ -208,8 +208,8 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_author = self.authors[1].toJson()
-        expected_comments = [self.comments[2].toJson()]
+        expected_author = self.authors[1].ToJson()
+        expected_comments = [self.comments[2].ToJson()]
 
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['comments'], expected_comments)
@@ -234,7 +234,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_author = steve.toJson()
+        expected_author = steve.ToJson()
         expected_comments = []
 
         self.assertEquals(response_data['author'], expected_author)
@@ -248,7 +248,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        expected_author = self.authors[1].toJson()
+        expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['removed_blogposts'], [])
 
@@ -264,9 +264,9 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        self.assertEquals(response_data['author'], expected_author.toJson())
+        self.assertEquals(response_data['author'], expected_author.ToJson())
         self.assertEquals(response_data['removed_blogposts'],
-                          [removed_blogpost.toJson()])
+                          [removed_blogpost.ToJson()])
 
     def test_author_get_all_removed_blogposts_usernotfound(self):
         post_data = {'username': 'steve'}
@@ -287,7 +287,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        expected_author = self.authors[1].toJson()
+        expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['removed_comments'], [])
 
@@ -303,9 +303,9 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        self.assertEquals(response_data['author'], expected_author.toJson())
+        self.assertEquals(response_data['author'], expected_author.ToJson())
         self.assertEquals(response_data['removed_comments'],
-                          [removed_comment.toJson()])
+                          [removed_comment.ToJson()])
 
     def test_author_get_all_removed_comments_usernotfound(self):
         post_data = {'username': 'steve'}
@@ -326,8 +326,8 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_authors = [self.authors[0].toJson(),
-                            self.authors[1].toJson()]
+        expected_authors = [self.authors[0].ToJson(),
+                            self.authors[1].ToJson()]
 
         self.assertEquals(response_data['authors'], expected_authors)
 
@@ -338,8 +338,8 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_authors = [self.authors[0].toJson(),
-                            self.authors[1].toJson()]
+        expected_authors = [self.authors[0].ToJson(),
+                            self.authors[1].ToJson()]
 
         self.assertEquals(response_data['authors'], expected_authors)
 
@@ -356,9 +356,9 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         expected_label = label_model.Label.GetByStorageKey('something')
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue('something' in response_data['blogpost']['labels'])
 
     def test_blogpost_add_label_blogpostnotfound(self):
@@ -393,9 +393,9 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue(expected_label.label not in
                         expected_blogpost.labels)
         self.assertTrue(expected_blogpost.id not in
@@ -414,7 +414,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertIsNone(response_data['blogpost'])
 
     def test_blogpost_remove_label_labelnotfound(self):
@@ -432,7 +432,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertIsNone(response_data['label'])
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
     def test_blogpost_remove_unsuccessful(self):
         post_data = {}
@@ -461,7 +461,7 @@ class ServerTest(unittest.TestCase):
         comment_id = response_data['comment']['id']
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertEquals(response_data['comment']['comment_text'],
                           comment_text)
         self.assertTrue(comment_id in response_data['blogpost']['comments'])
@@ -514,9 +514,9 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
         self.assertEquals(response_data['removed_comment'],
-                          expected_comment.toJson())
+                          expected_comment.ToJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue(response_data['removed_comment']['id'] in
                         response_data['removed_comment']['author']['removed_comments'])
         self.assertTrue(response_data['removed_comment']['id'] not in
@@ -554,7 +554,7 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
     def test_blogpost_get_by_id_unsuccessful(self):
         post_data = {'blogpost_id': ''}
@@ -587,10 +587,10 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
         self.assertEquals(response_data['comments'],
-                          [expected_comments.toJson()])
+                          [expected_comments.ToJson()])
 
     def test_blogpost_get_all_comments_nocomments(self):
         expected_blogpost = self.blogposts[0]
@@ -605,7 +605,7 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
         self.assertEquals(response_data['comments'], [])
 
@@ -641,11 +641,11 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
         self.assertEquals(response_data['labels'],
-                          [expected_labels[0].toJson(),
-                           expected_labels[1].toJson()])
+                          [expected_labels[0].ToJson(),
+                           expected_labels[1].ToJson()])
 
     def test_blogpost_get_all_labels_unsuccessful(self):
         post_data = {'blogpost_id': ''}
@@ -679,7 +679,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        expected_blogposts_json = [blogpost.toJson()
+        expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
                           expected_blogposts_json)
@@ -711,7 +711,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        expected_blogposts_json = [blogpost.toJson()
+        expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
                           expected_blogposts_json)
@@ -724,7 +724,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        expected_blogposts_json = [blogpost.toJson()
+        expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
                           expected_blogposts_json)
@@ -741,11 +741,11 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
         self.assertEquals(response_data['removed_blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertEquals(response_data['author'],
                           response_data['removed_blogpost']['author'])
         self.assertEquals(response_data['author'],
-                          expected_author.toJson())
+                          expected_author.ToJson())
 
     def test_blogpost_remove_unsuccessful(self):
         post_data = {}
@@ -774,10 +774,10 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        expected_blogposts = [self.blogposts[0].toJson(),
-                              self.blogposts[1].toJson()]
+        expected_blogposts = [self.blogposts[0].ToJson(),
+                              self.blogposts[1].ToJson()]
 
-        expected_author = self.authors[1].toJson()
+        expected_author = self.authors[1].ToJson()
 
         self.assertEquals(response_data['blogposts'], expected_blogposts)
         self.assertEquals(response_data['author'], expected_author)
@@ -811,7 +811,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['author'], steve.toJson())
+        self.assertEquals(response_data['author'], steve.ToJson())
         self.assertEquals(response_data['blogposts'], [])
 
     """Comment Tests"""
@@ -836,7 +836,7 @@ class ServerTest(unittest.TestCase):
         comment_id = response_data['comment']['id']
 
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertEquals(response_data['comment']['comment_text'],
                           comment_text)
         self.assertTrue(comment_id in response_data['blogpost']['comments'])
@@ -887,7 +887,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
         self.assertEquals(response_data['comment'],
-                          expected_comment.toJson())
+                          expected_comment.ToJson())
 
     def test_comment_get_by_id_notfound(self):
         post_data = {'comment_id': '12345'}
@@ -921,9 +921,9 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
         self.assertEquals(response_data['removed_comment'],
-                          expected_comment.toJson())
+                          expected_comment.ToJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue(response_data['removed_comment']['id'] in
                         response_data['removed_comment']['author']['removed_comments'])
         self.assertTrue(response_data['removed_comment']['id'] not in
@@ -958,8 +958,8 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_author = self.authors[1].toJson()
-        expected_comments = [self.comments[2].toJson()]
+        expected_author = self.authors[1].ToJson()
+        expected_comments = [self.comments[2].ToJson()]
 
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['comments'], expected_comments)
@@ -984,7 +984,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_author = steve.toJson()
+        expected_author = steve.ToJson()
         expected_comments = []
 
         self.assertEquals(response_data['author'], expected_author)
@@ -998,7 +998,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_comments_json = [comment.toJson()
+        expected_comments_json = [comment.ToJson()
                                   for comment in self.comments]
 
         self.assertEquals(response_data['comments'],
@@ -1010,7 +1010,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_comments_json = [comment.toJson()
+        expected_comments_json = [comment.ToJson()
                                   for comment in self.comments]
 
         self.assertEquals(response_data['comments'],
@@ -1050,7 +1050,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_label_json = [label.toJson() for label in self.labels]
+        expected_label_json = [label.ToJson() for label in self.labels]
 
         self.assertEquals(response_data['labels'], expected_label_json)
 
@@ -1071,7 +1071,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        expected_label_json = [label.toJson() for label in self.labels]
+        expected_label_json = [label.ToJson() for label in self.labels]
 
         self.assertEquals(response_data['labels'], expected_label_json)
 
@@ -1085,7 +1085,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
 
     def test_label_get_by_id_notfound(self):
         post_data = {'label_text': 'notfound'}
@@ -1117,9 +1117,9 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         expected_label = label_model.Label.GetByStorageKey('something')
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue('something' in response_data['blogpost']['labels'])
 
     def test_label_add_to_blogpost_blogpostnotfound(self):
@@ -1154,9 +1154,9 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
         self.assertTrue(expected_label.label not in
                         expected_blogpost.labels)
         self.assertTrue(expected_blogpost.id not in
@@ -1175,7 +1175,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
 
-        self.assertEquals(response_data['label'], expected_label.toJson())
+        self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertIsNone(response_data['blogpost'])
 
     def test_label_remove_from_blogpost_label_labelnotfound(self):
@@ -1193,7 +1193,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertIsNone(response_data['label'])
         self.assertEquals(response_data['blogpost'],
-                          expected_blogpost.toJson())
+                          expected_blogpost.ToJson())
 
     def test_label_remove_from_blogpost_unsuccessful(self):
         post_data = {}
@@ -1214,7 +1214,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
 
         response_data = json.loads(response.data)
-        expected_blogposts_json = [blogpost.toJson()
+        expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
                           expected_blogposts_json)
@@ -1251,7 +1251,7 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEquals(response_data['deleted_label'],
-                          expected_label.toJson())
+                          expected_label.ToJson())
 
         for blogpost in response_data['blogposts']:
             self.assertTrue(expected_label.label not in blogpost['labels'])
@@ -1281,7 +1281,7 @@ class ServerTest(unittest.TestCase):
 
         response_data = json.loads(response.data)
         self.assertEquals(response_data['deleted_label'],
-                          label.toJson())
+                          label.ToJson())
         self.assertEquals(response_data['blogposts'], [])
 
     def test_label_delete_unsuccessful(self):

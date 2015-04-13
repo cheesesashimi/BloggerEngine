@@ -210,7 +210,7 @@ class AuthorTests(unittest.TestCase):
         for removed_comment in removed_comments:
             author.removed_comments[removed_comment.id] = removed_comment
 
-        result = author.toJson()
+        result = author.ToJson()
 
         for blogpost in blogposts:
             self.assertTrue(blogpost.id in result['blogposts'])
@@ -233,7 +233,7 @@ class AuthorTests(unittest.TestCase):
     def test_ToJson_WithoutCommentsAndBlogposts(self):
         author = author_model.Author(self.username)
 
-        result = author.toJson()
+        result = author.ToJson()
 
         self.assertEquals(result['comments'], [])
         self.assertEquals(result['blogposts'], [])

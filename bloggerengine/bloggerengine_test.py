@@ -4,11 +4,11 @@ import unittest
 
 import bloggerengine
 
-from models import author as author_model
-from models import base_model
-from models import blogpost as blogpost_model
-from models import comment as comment_model
-from models import label as label_model
+import author as author_model
+import base_model
+import blogpost as blogpost_model
+import comment as comment_model
+import label as label_model
 
 
 class BloggerEngineTest(unittest.TestCase):

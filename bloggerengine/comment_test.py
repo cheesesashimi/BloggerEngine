@@ -71,24 +71,24 @@ class CommentTest(unittest.TestCase):
         comment = comment_model.Comment(self.author, self.blogpost,
                                         self.comment_text)
 
-        self.author.toJson.return_value = {
+        self.author.ToJson.return_value = {
             'username': 'zack',
             'id': self.author.id
         }
 
-        self.blogpost.toJson.return_value = {
+        self.blogpost.ToJson.return_value = {
             'headline': 'hi',
             'body': 'hello',
             'id': str(id(self.blogpost))
         }
 
-        result = comment.toJson()
+        result = comment.ToJson()
 
-        self.assertTrue(self.author.toJson.called)
-        self.assertTrue(self.blogpost.toJson.called)
-        self.assertEquals(result['author'], self.author.toJson.return_value)
+        self.assertTrue(self.author.ToJson.called)
+        self.assertTrue(self.blogpost.ToJson.called)
+        self.assertEquals(result['author'], self.author.ToJson.return_value)
         self.assertEquals(result['blogpost'],
-                          self.blogpost.toJson.return_value)
+                          self.blogpost.ToJson.return_value)
         self.assertEquals(result['created_timestamp'],
                           str(comment.created_timestamp))
         self.assertEquals(result['comment_text'],

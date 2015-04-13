@@ -99,7 +99,7 @@ class Author(base_model.BaseModel):
         """
         return self.removed_comments.values()
 
-    def toJson(self):
+    def ToJson(self):
         """Converts this object into a dictionary suitable for serialization.
 
         Returns:

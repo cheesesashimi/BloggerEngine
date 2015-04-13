@@ -186,7 +186,7 @@ class BlogpostTests(unittest.TestCase):
     def test_ToJson_WithCommentsAndLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
-        self.author.toJson.return_value = {
+        self.author.ToJson.return_value = {
             'username': self.author,
             'id': self.author.id
         }
@@ -199,7 +199,7 @@ class BlogpostTests(unittest.TestCase):
         for comment in comments:
             blogpost.comments[comment.id] = comment
 
-        result = blogpost.toJson()
+        result = blogpost.ToJson()
 
         for label in labels:
             self.assertTrue(label.label in result['labels'])
@@ -207,33 +207,33 @@ class BlogpostTests(unittest.TestCase):
         for comment in comments:
             self.assertTrue(comment.id in result['comments'])
 
-        self.assertTrue(self.author.toJson.called)
+        self.assertTrue(self.author.ToJson.called)
 
         self.assertEquals(result['headline'], blogpost.headline)
         self.assertEquals(result['body'], blogpost.body)
         self.assertEquals(result['id'], blogpost.id)
-        self.assertEquals(result['author'], self.author.toJson.return_value)
+        self.assertEquals(result['author'], self.author.ToJson.return_value)
         self.assertEquals(result['created_timestamp'],
                           str(blogpost.created_timestamp))
 
     def test_ToJson_NoCommentsOrLabels(self):
         blogpost = blogpost_model.Blogpost(self.author, self.headline,
                                            self.body)
-        self.author.toJson.return_value = {
+        self.author.ToJson.return_value = {
             'username': self.author,
             'id': self.author.id
         }
 
-        result = blogpost.toJson()
+        result = blogpost.ToJson()
 
-        self.assertTrue(self.author.toJson.called)
+        self.assertTrue(self.author.ToJson.called)
 
         self.assertEquals(result['labels'], [])
         self.assertEquals(result['comments'], [])
         self.assertEquals(result['headline'], blogpost.headline)
         self.assertEquals(result['body'], blogpost.body)
         self.assertEquals(result['id'], blogpost.id)
-        self.assertEquals(result['author'], self.author.toJson.return_value)
+        self.assertEquals(result['author'], self.author.ToJson.return_value)
         self.assertEquals(result['created_timestamp'],
                           str(blogpost.created_timestamp))
 

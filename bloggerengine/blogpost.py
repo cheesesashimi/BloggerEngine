@@ -80,7 +80,7 @@ class Blogpost(base_model.BaseModel):
         """
         return self.labels.values()
 
-    def toJson(self):
+    def ToJson(self):
         """Converts this object into a dictionary suitable for serialization.
 
         Returns:
@@ -88,7 +88,7 @@ class Blogpost(base_model.BaseModel):
 
         """
         return {
-            'author': self.author.toJson(),
+            'author': self.author.ToJson(),
             'headline': self.headline,
             'body': self.body,
             'id': self.id,

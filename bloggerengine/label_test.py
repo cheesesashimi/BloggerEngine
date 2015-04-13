@@ -118,7 +118,7 @@ class LabelTest(unittest.TestCase):
         label = label_model.Label('Test')
         label.blogposts[self.blogpost.id] = self.blogpost
 
-        result = label.toJson()
+        result = label.ToJson()
 
         self.assertEquals(result['blogposts'], [self.blogpost.id])
         self.assertEquals(result['label'], label.label)
@@ -129,7 +129,7 @@ class LabelTest(unittest.TestCase):
     def test_ToJson_NoBlogposts(self):
         label = label_model.Label('Test')
 
-        result = label.toJson()
+        result = label.ToJson()
 
         self.assertEquals(result['blogposts'], [])
         self.assertEquals(result['label'], label.label)
