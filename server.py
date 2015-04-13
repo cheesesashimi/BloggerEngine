@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 import interface
-from flask import Flask, json, jsonify, request
-from models import base_model
+from flask import Flask, abort, json, jsonify, request
 
 app = Flask('BloggerEngine')
 
@@ -23,7 +22,7 @@ def author_create():
 
     return jsonify({
         'author': blogger_engine.GetOrInsertAuthor(username).toJson()
-    }
+    })
 
 @app.route('/author/get_by_username', methods=['POST'])
 def author_get_by_username():
@@ -56,14 +55,14 @@ def author_get_all_blogposts():
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
         author_json = author.toJson()
+        if author.GetBlogposts():
+            blogposts_json = [blogpost.toJson()
+                              for blogpost in author.GetBlogposts()]
+        else:
+            blogposts_json = []
     else:
+        blogposts_json = []
         author_json = None
-
-    if author.GetBlogposts():
-        blogposts_json = [blogpost.toJson()
-                          for blogpost in author.GetBlogposts()]
-    else:
-        blogposts_json = None
 
     return jsonify({
         'blogposts': blogposts_json,
@@ -80,15 +79,15 @@ def author_get_all_removed_blogposts():
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
         author_json = author.toJson()
+        if author.GetRemovedBlogposts():
+            removed_blogposts_json = [blogpost.toJson()
+                                      for blogpost in
+                                          author.GetRemovedBlogposts()]
+        else:
+            removed_blogposts_json = []
     else:
         author_json = None
-
-    if author.GetRemovedBlogposts():
-        removed_blogposts_json = [blogpost.toJson()
-                                  for blogpost in
-                                      author.GetRemovedBlogposts()]
-    else:
-        removed_blogposts_json = None
+        removed_blogposts_json = []
 
     return jsonify({
         'removed_blogposts': removed_blogposts_json,
@@ -105,14 +104,14 @@ def author_get_all_comments():
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
         author_json = author.toJson()
+        if author.GetComments():
+            comments_json = [comment.toJson()
+                             for comment in author.GetComments()]
+        else:
+            comments_json = []
     else:
         author_json = None
-
-    if author.GetComments():
-        comments_json = [comment.toJson()
-                         for comment in author.GetComments()]
-    else:
-        comments_json = None
+        comments_json = []
 
     return jsonify({
         'comments': comments_json,
@@ -129,21 +128,22 @@ def author_get_all_removed_comments():
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
         author_json = author.toJson()
+        if author.GetRemovedComments():
+            removed_comments_json = [comment.toJson()
+                                     for comment in
+                                         author.GetRemovedComments()]
+        else:
+            removed_comments_json = []
     else:
         author_json = None
-
-    if author.GetRemovedComments():
-        removed_comments_json = [comment.toJson()
-                                 for comment in author.GetRemovedComments()]
-    else:
-        removed_comments_json = None
+        removed_comments_json = []
 
     return jsonify({
         'removed_comments': removed_comments_json,
         'author': author_json
     })
 
-@app.route('/author/get_all', methods=['POST'])
+@app.route('/author/get_all', methods=['GET', 'POST'])
 def author_get_all():
     authors = blogger_engine.GetAllAuthors()
     if authors:
@@ -173,7 +173,7 @@ def blogpost_create():
                                                   body).toJson()
     })
 
-@app.route('/blogpost/add_label', methods['POST'])
+@app.route('/blogpost/add_label', methods=['POST'])
 def blogpost_add_label():
     content = request.get_json()
 
@@ -192,7 +192,7 @@ def blogpost_add_label():
         blogpost_json = None
 
     return jsonify({
-        'label': label_json
+        'label': label_json,
         'blogpost': blogpost_json
     })
         
@@ -227,7 +227,7 @@ def blogpost_add_comment():
     comment_text = content.get('comment_text')
     blogpost_id = content.get('blogpost_id')
 
-    if not username and not comment_text and not blogpost_id:
+    if not username or not comment_text or not blogpost_id:
         abort(400)
 
     comment = blogger_engine.SubmitComment(username, comment_text,
@@ -254,12 +254,11 @@ def blogpost_remove_comment():
 
     comment = blogger_engine.GetCommentById(comment_id)
     if comment:
-        blogpost_json = comment.blogpost.toJson()
         removed_comment = blogger_engine.RemoveCommentFromBlogpost(
             comment.id)
         return jsonify({
             'removed_comment': removed_comment.toJson(),
-            'blogpost': blogpost_json
+            'blogpost': removed_comment.blogpost.toJson()
         })
 
     return jsonify({
@@ -277,12 +276,12 @@ def blogpost_get_by_id():
 
     blogpost = blogger_engine.GetBlogpostById(blogpost_id)
     if blogpost:
-        blogpost_json = blogpost.toJson()
-    else:
-        blogpost_json = None
+        return jsonify({
+            'blogpost': blogpost.toJson()
+        })
 
     return jsonify({
-        'blogpost': blogpost_json
+        'blogpost': None
     })
 
 @app.route('/blogpost/get_all_comments', methods=['POST'])
@@ -294,16 +293,23 @@ def blogpost_get_all_comments():
     if not blogpost_id:
         abort(400)
 
+    blogpost = blogger_engine.GetBlogpostById(blogpost_id)
     comments = blogger_engine.GetCommentsByBlogpost(blogpost_id)
-    if not comments:
+    if blogpost and comments:
         return jsonify({
-            'comments': None,
-            'blogpost': None
+            'comments': [comment.toJson() for comment in comments],
+            'blogpost': blogpost.toJson()
+        })
+
+    if blogpost:
+        return jsonify({
+            'comments': [],
+            'blogpost': blogpost.toJson()
         })
 
     return jsonify({
-        'comments': [comment.toJson() for comment in comments],
-        'blogpost': blogger_engine.GetBlogpostById(blogpost_id).toJson()
+        'comments': [],
+        'blogpost': None
     })
 
 @app.route('/blogpost/get_all_labels', methods=['POST'])
@@ -315,15 +321,15 @@ def blogpost_get_all_labels():
         abort(400)
 
     labels = blogger_engine.GetLabelsByBlogpost(blogpost_id)
-    if not labels:
+    if labels:
         return jsonify({
-            'blogpost': [],
-            'labels': None
+            'blogpost': blogger_engine.GetBlogpostById(blogpost_id).toJson(),
+            'labels': [label.toJson() for label in labels]
         })
 
     return jsonify({
-        'blogpost': blogger_engine.GetBlogpostById(blogpost_id).toJson(),
-        'labels': [label.toJson() for label in labels]
+        'blogpost': None,
+        'labels': []
     })
 
 @app.route('/blogpost/get_by_label', methods=['POST'])
@@ -333,7 +339,7 @@ def blogpost_get_by_label():
     if not label_text:
         abort(400)
 
-    blogposts = blogger_engine.GetBlogpostsByLabel()
+    blogposts = blogger_engine.GetBlogpostsByLabel(label_text)
     if blogposts:
         return jsonify({
             'blogposts': [blogpost.toJson() for blogpost in blogposts]
@@ -371,17 +377,19 @@ def comment_create():
 @app.route('/comment/get_by_id', methods=['POST'])
 def comment_get_by_id():
     content = request.get_json()
-    comment_id = content.get('content')
+    comment_id = content.get('comment_id')
     
     if not comment_id:
         abort(400)
 
     comment = blogger_engine.GetCommentById(comment_id)
     if comment:
-        comment_json = comment.toJson()
+        return jsonify({
+            'comment': comment.toJson()
+        })
 
     return jsonify({
-        'comment': comment_json
+        'comment': None
     })
 
 @app.route('/comment/remove', methods=['POST'])
@@ -392,16 +400,16 @@ def comment_remove():
 def comment_get_all_by_username():
     return author_get_all_comments()
     
-@app.route('/comment/get_all', methods=['POST'])
+@app.route('/comment/get_all', methods=['GET', 'POST'])
 def comments_get_all():
     comments = blogger_engine.GetAllComments()
     if comments:
-        comments_json = [comment.toJson() for comment in comments]
-    else:
-        comments_json = []
+        return jsonify({
+            'comments': [comment.toJson() for comment in comments]
+        })
 
     return jsonify({
-        'comments': comments_json
+        'comments': []
     })
 
 """Label methods."""
@@ -417,20 +425,26 @@ def label_create():
         'label': blogger_engine.GetOrInsertLabel(label_text).toJson()
     })
 
-@app.route('/label/get_all', methods=['POST'])
+@app.route('/label/get_all', methods=['GET', 'POST'])
 def label_get_all():
     labels = blogger_engine.GetAllLabels()
     if labels:
-        labels_json = [label.toJson() for label in labels]
-    else:
-        labels_json = []
+        return jsonify({
+            'labels': [label.toJson() for label in labels]
+        })
 
     return jsonify({
-        'labels': labels_json
+        'labels': []
     })
 
-@app.route('/label/get_by_id', methods['POST'])
+@app.route('/label/get_by_id', methods=['POST'])
 def label_get_by_id():
+    content = request.get_json()
+    label_text = content.get('label_text')
+
+    if not label_text:
+        abort(400)
+
     label = blogger_engine.GetLabel(label_text)
     if label:
         label_json = label.toJson()
@@ -449,7 +463,7 @@ def label_add_to_blogpost():
 def label_remove_from_blogpost():
     return blogpost_remove_label()
 
-@app.route('/label/get_all_blogposts_with_label')
+@app.route('/label/get_all_blogposts_with_label', methods=['POST'])
 def label_get_all_blogposts_with_label():
     return blogpost_get_by_label()
 
@@ -458,18 +472,26 @@ def label_delete():
     content = request.get_json()
     label_text = content.get('label_text')
 
-
     if not label_text:
         abort(400)
 
+    blogposts = blogger_engine.GetBlogpostsByLabel(label_text)
     deleted_label = blogger_engine.DeleteLabel(label_text)
     if deleted_label:
-        return jsonify({
-            'deleted_label': deleted_label.toJson()
-        })
+        if blogposts:
+            return jsonify({
+                'deleted_label': deleted_label.toJson(),
+                'blogposts': [blogpost.toJson() for blogpost in blogposts]
+            })
+        else:
+            return jsonify({
+                'deleted_label': deleted_label.toJson(),
+                'blogposts': []
+            })
 
     return jsonify({
-        'deleted_label': None
+        'deleted_label': None,
+        'blogposts': []
     })
 
 if __name__ == '__main__':
