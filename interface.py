@@ -249,7 +249,14 @@ class BloggerEngine(object):
         return label
 
     def DeleteBlogpost(self, blogpost_id):
-        """Removes a blogpost from the datastore and associated comments."""
+        """Removes a blogpost from the datastore and associated comments.
+
+        Args:
+          blogpost_id: string; The blogpost ID to delete.
+
+        Returns:
+          The deleted blogpost object.
+        """
         blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if not blogpost:
             return None
@@ -265,7 +272,11 @@ class BloggerEngine(object):
         return blogpost
 
     def GetAllLabels(self):
-        """Gets all labels."""
+        """Gets all labels.
+
+        Returns:
+          A list of all label instances.
+        """
         return label_model.Label.GetAll()
 
     def GetOrInsertLabel(self, label_text):
@@ -313,9 +324,17 @@ class BloggerEngine(object):
         return author
 
     def GetAllAuthors(self):
-        """Gets all authors."""
+        """Gets all authors.
+
+        Returns:
+          A list of all author instances.
+        """
         return author_model.Author.GetAll()
 
     def GetAllComments(self):
-        """Gets all comments."""
+        """Gets all comments.
+
+        Returns:
+          A list of all comment instances.
+        """
         return comment_model.Comment.GetAll()
