@@ -14,6 +14,7 @@ class LabelTest(unittest.TestCase):
     def setUp(self):
         label_model.Label.instances = {}
         self.blogpost = mock.MagicMock(spec=blogpost_model.Blogpost)
+        self.blogpost.id = str(id(self.blogpost))
 
     def tearDown(self):
         del self.blogpost
@@ -112,6 +113,32 @@ class LabelTest(unittest.TestCase):
         expected = label
 
         self.assertEquals(result, expected)
+
+    def test_ToJson_WithBlogposts(self):
+        label = label_model.Label('Test')
+        label.blogposts[self.blogpost.id] = self.blogpost
+
+        result = label.toJson()
+
+        self.assertEquals(result['blogposts'], [self.blogpost.id])
+        self.assertEquals(result['label'], label.label)
+        self.assertEquals(result['id'], label.storage_key)
+        self.assertEquals(result['created_timestamp'],
+                          str(label.created_timestamp))
+
+
+    def test_ToJson_NoBlogposts(self):
+        label = label_model.Label('Test')
+
+        result = label.toJson()
+
+        self.assertEquals(result['blogposts'], [])
+        self.assertEquals(result['label'], label.label)
+        self.assertEquals(result['id'], label.storage_key)
+        self.assertEquals(result['created_timestamp'],
+                          str(label.created_timestamp))
+
+
 
 if __name__ == '__main__':
     unittest.main()

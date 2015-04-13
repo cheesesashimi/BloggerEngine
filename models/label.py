@@ -48,3 +48,15 @@ class Label(base_model.BaseModel):
 
         """
         return self.blogposts.values()
+
+    def toJson(self):
+        """Converts this object into a dictionary suitable for serialization.
+        Returns:
+          A dictionary.
+        """
+        return {
+          'label': self.label,
+          'id': self.storage_key,
+          'created_timestamp': str(self.created_timestamp),
+          'blogposts': [blogpost.id for blogpost in self.GetBlogposts()]
+        }
