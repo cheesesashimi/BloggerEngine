@@ -207,6 +207,8 @@ class BlogpostTests(unittest.TestCase):
         for comment in comments:
             self.assertTrue(comment.id in result['comments'])
 
+        self.assertTrue(self.author.toJson.called)
+
         self.assertEquals(result['headline'], blogpost.headline)
         self.assertEquals(result['body'], blogpost.body)
         self.assertEquals(result['id'], blogpost.id)
@@ -223,6 +225,8 @@ class BlogpostTests(unittest.TestCase):
         }
 
         result = blogpost.toJson()
+
+        self.assertTrue(self.author.toJson.called)
 
         self.assertEquals(result['labels'], [])
         self.assertEquals(result['comments'], [])
