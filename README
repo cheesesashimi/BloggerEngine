@@ -16,8 +16,10 @@ To Get Started:
 - To run all the tests, use the provided run_tests.sh script.
 
 The server uses Flask and implements a number of URL methods for
-working with authors, blogposts, comments and labels. Here is a list
-of these methods and any required arguments:
+working with authors, blogposts, comments and labels. These URLs accept
+a JSON POST request with the required arguments and will return JSON,
+assuming the request is successful. URLs missing arguments do not require
+them.
 
 Author URLs:
 /author/create - username
@@ -43,9 +45,9 @@ Blogpost URLs:
 /blogpost/remove_label - label_text
 
 Comment URLs:
-/comment/create - comment_author_username
+/comment/create - username, comment_content
 /comment/get_all
-/comment/get_all_by_username - comment_author_username
+/comment/get_all_by_username - username
 /comment/get_by_id - comment_id
 /comment/remove - comment_id
 
