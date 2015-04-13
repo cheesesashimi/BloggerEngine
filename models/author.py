@@ -14,8 +14,8 @@ class Author(base_model.BaseModel):
 
         """
         super(Author, self).__init__()
-        self.storage_key = username
-        self.username = username
+        self.username = username.lower()
+        self.storage_key = self.username
         self.comments = OrderedDict()
         self.blogposts = OrderedDict()
         self.removed_blogposts = OrderedDict()
@@ -72,6 +72,14 @@ class Author(base_model.BaseModel):
         """
         return self.blogposts.values()
 
+    def GetRemovedBlogposts(self):
+        """Gets a list of removed blogposts.
+
+        Returns:
+          A list of removed blogposts.
+        """
+        return self.removed_blogposts.values()
+
     def GetComments(self):
         """Gets all comments for this user.
 
@@ -80,3 +88,30 @@ class Author(base_model.BaseModel):
 
         """
         return self.comments.values()
+
+    def GetRemovedComments(self):
+        """Gets a list of removed comments.
+
+        Returns:
+          A list of all removed comments.
+        """
+        return self.removed_comments.values()
+
+    def toJson(self):
+        """Converts this object into a dictionary suitable for serialization.
+        Returns:
+          A dictionary.
+        """
+        return {
+            'username': self.username,
+            'id': self.storage_key,
+            'created_timestamp': str(self.created_timestamp),
+            'comments': [comment.id for comment in self.GetComments()],
+            'blogposts': [blogpost.id for blogpost in self.GetBlogposts()],
+            'removed_blogposts': [blogpost.id
+                                  for blogpost in
+                                      self.removed_blogposts.values()],
+            'removed_comments': [comment.id
+                                 for comment in
+                                     self.removed_comments.values()]
+        }

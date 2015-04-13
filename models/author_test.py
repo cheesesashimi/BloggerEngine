@@ -151,6 +151,23 @@ class AuthorTests(unittest.TestCase):
         result = author.GetComments()
         self.assertEquals(result, comments)
 
+    def test_GetRemovedComments_NoComments(self):
+        author = author_model.Author(self.username)
+        result = author.GetRemovedComments()
+        expected = []
+
+        self.assertEquals(result, expected)
+
+    def test_GetRemovedComments_WithComments(self):
+        author = author_model.Author(self.username)
+
+        removed_removed_comments = list(self.GenerateComments())
+        for removed_comment in removed_removed_comments:
+            author.removed_comments[removed_comment.id] = removed_comment
+
+        result = author.GetRemovedComments()
+        self.assertEquals(result, removed_removed_comments) 
+
     def test_Put(self):
         author = author_model.Author(self.username)
         author.put()
@@ -173,6 +190,43 @@ class AuthorTests(unittest.TestCase):
         result = author_model.Author.GetByStorageKey(self.username)
         expected = author
         self.assertEquals(result, expected)
+
+    def test_ToJson(self):
+        author = author_model.Author(self.username)
+
+        blogposts = list(self.GenerateBlogposts())
+        for blogpost in blogposts:
+            author.AddBlogpost(blogpost)
+
+        comments = list(self.GenerateComments())
+        for comment in comments:
+            author.AddComment(comment)
+
+        removed_blogposts = list(self.GenerateBlogposts())
+        for removed_blogpost in removed_blogposts:
+            author.removed_blogposts[removed_blogpost.id] = removed_blogpost
+
+        removed_comments = list(self.GenerateComments())
+        for removed_comment in removed_comments:
+            author.removed_comments[removed_comment.id] = removed_comment
+
+        result = author.toJson()
+
+        for blogpost in blogposts:
+            self.assertTrue(blogpost.id in result['blogposts'])
+
+        for removed_blogpost in removed_blogposts:
+            self.assertTrue(removed_blogpost.id in result['removed_blogposts'])
+
+        for comment in comments:
+            self.assertTrue(comment.id in result['comments'])
+
+        for removed_comment in removed_comments:
+            self.assertTrue(removed_comment.id in result['removed_comments'])
+
+        self.assertIsNotNone(result['created_timestamp'])
+        self.assertIsNotNone(result['id'])
+        self.assertEquals(result['username'], self.username)
 
     def GenerateBlogposts(self):
         for unused_x in xrange(5):
