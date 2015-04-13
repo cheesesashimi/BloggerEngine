@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-import interface
+import bloggerengine
 from flask import Flask, abort, json, jsonify, request
 
 app = Flask('BloggerEngine')
 
-blogger_engine = interface.BloggerEngine()
+blogger_engine = bloggerengine.BloggerEngine()
 
 
 @app.route('/')

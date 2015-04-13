@@ -2,7 +2,7 @@
 
 import unittest
 import json
-import interface
+import bloggerengine
 import server
 
 from models import author as author_model

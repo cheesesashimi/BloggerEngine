@@ -2,7 +2,7 @@
 
 import unittest
 
-import interface
+import bloggerengine
 
 from models import author as author_model
 from models import base_model
@@ -81,7 +81,7 @@ class BloggerEngineTest(unittest.TestCase):
         self.comments = [comment1, comment2, comment3]
         self.labels = [label1, label2, label3]
 
-        self.blogger_engine = interface.BloggerEngine()
+        self.blogger_engine = bloggerengine.BloggerEngine()
 
     def tearDown(self):
         del self.blogger_engine
