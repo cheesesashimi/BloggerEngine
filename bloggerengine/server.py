@@ -17,8 +17,16 @@ def index():
 
 @app.route('/author/create', methods=['POST'])
 def author_create():
-    content = request.get_json()
-    username = content.get('username')
+    """Creates a new author.
+
+    Request Args:
+      username: string; The author username to create.
+
+    Returns:
+      A dictionary containing the new Author.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
@@ -29,51 +37,77 @@ def author_create():
 
 @app.route('/author/get_by_username', methods=['POST'])
 def author_get_by_username():
-    content = request.get_json()
-    username = content.get('username')
+    """Gets an author by their username.
+
+    Request Args:
+      username: string; The author username to retrieve.
+
+    Returns:
+      A dictionary with the retrieved author, if found.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
-        author = author.ToJson()
-    else:
-        author = None
+        return jsonify({
+            'author': author.ToJson()
+        })
 
     return jsonify({
-        'author': author
+        'author': None
     })
 
 
 @app.route('/author/get_all_blogposts', methods=['POST'])
 def author_get_all_blogposts():
-    content = request.get_json()
-    username = content.get('username')
+    """Gets all blogposts for a given author.
+
+    Request Args:
+      username: string; The author username to retrieve blogposts.
+
+    Returns:
+      A dictionary of the the author's blogposts, if found.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
     author = blogger_engine.GetAuthorByUsername(username)
     if author:
-        author_json = author.ToJson()
         if author.GetBlogposts():
-            blogposts_json = [blogpost.ToJson()
-                              for blogpost in author.GetBlogposts()]
+            return jsonify({
+                'blogposts': [blogpost.ToJson()
+                              for blogpost in author.GetBlogposts()],
+                'author': author.ToJson()
+            })
         else:
-            blogposts_json = []
-    else:
-        blogposts_json = []
-        author_json = None
+            return jsonify({
+                'blogposts': [],
+                'author': author.ToJson()
+            })
 
     return jsonify({
-        'blogposts': blogposts_json,
-        'author': author_json
+        'blogposts': [],
+        'author': None
     })
 
 
 @app.route('/author/get_all_removed_blogposts', methods=['POST'])
 def author_get_all_removed_blogposts():
-    content = request.get_json()
-    username = content.get('username')
+    """Gets all remobved blogposts associated with an author.
+
+    Request Args:
+      username: string; The author username to retrieve blogposts.
+
+    Returns:
+      A dictionary of removed blogposts, if found.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
@@ -81,25 +115,35 @@ def author_get_all_removed_blogposts():
     if author:
         author_json = author.ToJson()
         if author.GetRemovedBlogposts():
-            removed_blogposts_json = [blogpost.ToJson()
+            return jsonify({
+                'removed_blogposts': [blogpost.ToJson()
                                       for blogpost in
-                                      author.GetRemovedBlogposts()]
+                                          author.GetRemovedBlogposts()],
+                'author': author_json
+            })
         else:
-            removed_blogposts_json = []
-    else:
-        author_json = None
-        removed_blogposts_json = []
+            return jsonify({
+                'removed_blogposts': [],
+                'author': author_json
+            })
 
     return jsonify({
-        'removed_blogposts': removed_blogposts_json,
-        'author': author_json
+        'author': None,
+        'removed_blogposts': []
     })
-
 
 @app.route('/author/get_all_comments', methods=['POST'])
 def author_get_all_comments():
-    content = request.get_json()
-    username = content.get('username')
+    """Gets all comments from a given author.
+
+    Request Args:
+      username: string; The author username to retrieve comments.
+
+    Returns:
+      A dictionary of comments, if found.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
@@ -107,24 +151,35 @@ def author_get_all_comments():
     if author:
         author_json = author.ToJson()
         if author.GetComments():
-            comments_json = [comment.ToJson()
-                             for comment in author.GetComments()]
+            return jsonify({
+                'comments': [comment.ToJson()
+                             for comment in author.GetComments()],
+                'author': author_json
+            })
         else:
-            comments_json = []
-    else:
-        author_json = None
-        comments_json = []
+            return jsonify({
+                'comments': [],
+                'author': author_json
+            })
 
     return jsonify({
-        'comments': comments_json,
-        'author': author_json
+        'comments': [],
+        'author': None
     })
 
 
 @app.route('/author/get_all_removed_comments', methods=['POST'])
 def author_get_all_removed_comments():
-    content = request.get_json()
-    username = content.get('username')
+    """Gets all removed comments from an author.
+
+    Request Args:
+      username: string; The author to get removed comments.
+
+    Returns:
+      A dictionary of removed comments, if found.
+    """
+    request_arguments = request.get_json()
+    username = request_arguments.get('username')
     if not username:
         abort(400)
 
@@ -132,23 +187,31 @@ def author_get_all_removed_comments():
     if author:
         author_json = author.ToJson()
         if author.GetRemovedComments():
-            removed_comments_json = [comment.ToJson()
+            return jsonify({
+                'removed_comments': [comment.ToJson()
                                      for comment in
-                                     author.GetRemovedComments()]
+                                         author.GetRemovedComments()],
+                'author': author_json
+            })
         else:
-            removed_comments_json = []
-    else:
-        author_json = None
-        removed_comments_json = []
+            return jsonify({
+                'removed_comments': [],
+                'author': author_json
+            })
 
     return jsonify({
-        'removed_comments': removed_comments_json,
-        'author': author_json
+        'removed_comments': [],
+        'author': None
     })
 
 
 @app.route('/author/get_all', methods=['GET', 'POST'])
 def author_get_all():
+    """Get all authors.
+
+    Returns:
+      A dictionary of all authors in the datastore.
+    """
     authors = blogger_engine.GetAllAuthors()
     if authors:
         return jsonify({
@@ -164,11 +227,21 @@ def author_get_all():
 
 @app.route('/blogpost/create', methods=['POST'])
 def blogpost_create():
-    content = request.get_json()
+    """Creates a new blogpost (and author, if not found).
 
-    username = content.get('username')
-    headline = content.get('headline')
-    body = content.get('body')
+    Request Args:
+      username: string; The username of the author.
+      headline: string; The headline of the post.
+      body: string; The main body of the post.
+
+    Returns:
+      A dictionary containing the new blogpost and author.
+    """
+    request_arguments = request.get_json()
+
+    username = request_arguments.get('username')
+    headline = request_arguments.get('headline')
+    body = request_arguments.get('body')
 
     if not username and not headline and not body:
         abort(400)
@@ -176,39 +249,58 @@ def blogpost_create():
     return jsonify({
         'blogpost': blogger_engine.SubmitBlogpost(username,
                                                   headline,
-                                                  body).ToJson()
+                                                  body).ToJson(),
+        'author': blogger_engine.GetAuthorByUsername(username).ToJson()
     })
 
 
 @app.route('/blogpost/add_label', methods=['POST'])
 def blogpost_add_label():
-    content = request.get_json()
+    """Adds a label to a blogpost, creating the label if necessary.
 
-    label_text = content.get('label_text')
-    blogpost_id = content.get('blogpost_id')
+    Request Args:
+      blogpost_id: string; The blogpost ID.
+      label_text: string; The label text.
+
+    Returns:
+      A dictionary containing the new label and the affected blogpost.
+    """
+    request_arguments = request.get_json()
+
+    label_text = request_arguments.get('label_text')
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not label_text and not blogpost_id:
         abort(400)
 
     label = blogger_engine.AddLabelToBlogpost(label_text, blogpost_id)
-    if label:
-        label_json = label.ToJson()
-        blogpost_json = blogger_engine.GetBlogpostById(blogpost_id).ToJson()
-    else:
-        label_json = None
-        blogpost_json = None
+    blogpost = blogger_engine.GetBlogpostById(blogpost_id)
+
+    if label and blogpost:
+        return jsonify({
+            'label': label.ToJson(),
+            'blogpost': blogpost.ToJson()
+        })
 
     return jsonify({
-        'label': label_json,
-        'blogpost': blogpost_json
+        'label': None,
+        'blogpost': None
     })
-
 
 @app.route('/blogpost/remove_label', methods=['POST'])
 def blogpost_remove_label():
-    content = request.get_json()
-    label_text = content.get('label_text')
-    blogpost_id = content.get('blogpost_id')
+    """Removes a label from a blogpost.
+
+    Request Args:
+      label_text: string; The label to remove.
+      blogpost_id: string; The blogpost to remove the label from.
+
+    Returns:
+      A dictionary containing the affected blogpost and label.
+    """
+    request_arguments = request.get_json()
+    label_text = request_arguments.get('label_text')
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not label_text or not blogpost_id:
         abort(400)
@@ -244,11 +336,21 @@ def blogpost_remove_label():
 
 @app.route('/blogpost/add_comment', methods=['POST'])
 def blogpost_add_comment():
-    content = request.get_json()
+    """Adds a comment to a blogpost.
 
-    username = content.get('username')
-    comment_text = content.get('comment_text')
-    blogpost_id = content.get('blogpost_id')
+    Request Args:
+      username: string; The comment author's username.
+      comment_text: string; The comment text.
+      blogpost_id: string; The blogpost ID to associate the comment with.
+
+    Returns:
+      A dictionary containing the comment and affected blogpost.
+    """
+    request_arguments = request.get_json()
+
+    username = request_arguments.get('username')
+    comment_text = request_arguments.get('comment_text')
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not username or not comment_text or not blogpost_id:
         abort(400)
@@ -270,8 +372,16 @@ def blogpost_add_comment():
 
 @app.route('/blogpost/remove_comment', methods=['POST'])
 def blogpost_remove_comment():
-    content = request.get_json()
-    comment_id = content.get('comment_id')
+    """Removes a comment from a blogpost.
+
+    Request Args:
+      comment_id: string; The comment to remove from a blogpost.
+
+    Returns:
+      A dictionary containing the removed comment and affected blogpost.
+    """
+    request_arguments = request.get_json()
+    comment_id = request_arguments.get('comment_id')
 
     if not comment_id:
         abort(400)
@@ -293,8 +403,16 @@ def blogpost_remove_comment():
 
 @app.route('/blogpost/get_by_id', methods=['POST'])
 def blogpost_get_by_id():
-    content = request.get_json()
-    blogpost_id = content.get('blogpost_id')
+    """Gets a blogpost from it's ID.
+
+    Request Args:
+      blogpost_id: string; The blogpost ID to retrieve.
+
+    Returns:
+      A dictionary containing the blogpost, if found.
+    """
+    request_arguments = request.get_json()
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not blogpost_id:
         abort(400)
@@ -312,9 +430,17 @@ def blogpost_get_by_id():
 
 @app.route('/blogpost/get_all_comments', methods=['POST'])
 def blogpost_get_all_comments():
-    content = request.get_json()
+    """Get all comments associated with a blogpost.
 
-    blogpost_id = content.get('blogpost_id')
+    Request Args:
+      blogpost_id: string; The blogpost to retrieve comments from.
+
+    Returns:
+      A dictionary containing the retrieved comments and the blogpost.
+    """
+    request_arguments = request.get_json()
+
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not blogpost_id:
         abort(400)
@@ -341,9 +467,17 @@ def blogpost_get_all_comments():
 
 @app.route('/blogpost/get_all_labels', methods=['POST'])
 def blogpost_get_all_labels():
-    content = request.get_json()
+    """Gets all labels associated with a blogpost.
 
-    blogpost_id = content.get('blogpost_id')
+    Request Args:
+      blogpost_id: string; The blogpost ID to retrieve labels from.
+
+    Returns:
+      A dictionary containing the blogpost and labels found.
+    """
+    request_arguments = request.get_json()
+
+    blogpost_id = request_arguments.get('blogpost_id')
     if not blogpost_id:
         abort(400)
 
@@ -362,8 +496,16 @@ def blogpost_get_all_labels():
 
 @app.route('/blogpost/get_by_label', methods=['POST'])
 def blogpost_get_by_label():
-    content = request.get_json()
-    label_text = content.get('label_text')
+    """Gets all blogposts associated with a given label.
+
+    Request Args:
+      label_text: string; The label to query for.
+
+    Returns:
+      A dictionary containing the blogposts, if found.
+    """
+    request_arguments = request.get_json()
+    label_text = request_arguments.get('label_text')
     if not label_text:
         abort(400)
 
@@ -380,6 +522,11 @@ def blogpost_get_by_label():
 
 @app.route('/blogpost/get_all', methods=['GET', 'POST'])
 def blogpost_get_all():
+    """Retrieves all blogposts from the datastore.
+
+    Returns:
+      A dictionary containing all blogposts.
+    """
     blogposts = blogger_engine.GetAllBlogposts()
     if blogposts:
         return jsonify({
@@ -393,8 +540,14 @@ def blogpost_get_all():
 
 @app.route('/blogpost/remove', methods=['POST'])
 def blogpost_remove():
-    content = request.get_json()
-    blogpost_id = content.get('blogpost_id')
+    """Removes a blogpost from the datastore, but allows the author
+       to keep it.
+
+    Request Args:
+      blogpost_id: string; The blogpost ID to remove.
+    """
+    request_arguments = request.get_json()
+    blogpost_id = request_arguments.get('blogpost_id')
 
     if not blogpost_id:
         abort(400)
@@ -417,6 +570,14 @@ def blogpost_remove():
 
 @app.route('/blogpost/get_all_by_username', methods=['POST'])
 def blogpost_get_all_by_username():
+    """Gets all blogposts for a given author.
+
+    Request Args:
+      username: string; The author username to retrieve blogposts for.
+
+    Returns:
+      A dictionary containing the blogposts for a given author, if found.
+    """
     return author_get_all_blogposts()
 
 """Comment methods."""
@@ -424,13 +585,31 @@ def blogpost_get_all_by_username():
 
 @app.route('/comment/create', methods=['POST'])
 def comment_create():
+    """Adds a comment to a blogpost.
+
+    Request Args:
+      username: string; The comment author's username.
+      comment_text: string; The comment text.
+      blogpost_id: string; The blogpost ID to associate the comment with.
+
+    Returns:
+      A dictionary containing the comment and affected blogpost.
+    """ 
     return blogpost_add_comment()
 
 
 @app.route('/comment/get_by_id', methods=['POST'])
 def comment_get_by_id():
-    content = request.get_json()
-    comment_id = content.get('comment_id')
+    """Gets a comment by ID.
+
+    Request Args:
+      comment_id: string; The ID of the comment to retrieve.
+
+    Returns:
+      A dictinoary containing the comment, if found.
+    """
+    request_arguments = request.get_json()
+    comment_id = request_arguments.get('comment_id')
 
     if not comment_id:
         abort(400)
@@ -448,16 +627,37 @@ def comment_get_by_id():
 
 @app.route('/comment/remove', methods=['POST'])
 def comment_remove():
+    """Removes a comment from a blogpost.
+
+    Request Args:
+      comment_id: string; The comment to remove from a blogpost.
+
+    Returns:
+      A dictionary containing the removed comment and affected blogpost.
+    """ 
     return blogpost_remove_comment()
 
 
 @app.route('/comment/get_all_by_username', methods=['POST'])
 def comment_get_all_by_username():
+    """Gets all comments from a given author.
+
+    Request Args:
+      username: string; The author username to retrieve comments.
+
+    Returns:
+      A dictionary of comments, if found.
+    """
     return author_get_all_comments()
 
 
 @app.route('/comment/get_all', methods=['GET', 'POST'])
 def comments_get_all():
+    """Gets all comments from the datastore.
+
+    Returns:
+      A dictionary of comments.
+    """
     comments = blogger_engine.GetAllComments()
     if comments:
         return jsonify({
@@ -473,8 +673,16 @@ def comments_get_all():
 
 @app.route('/label/create', methods=['POST'])
 def label_create():
-    content = request.get_json()
-    label_text = content.get('label_text')
+    """Creates a label.
+
+    Request Args:
+      label_text: string; The label text.
+
+    Returns:
+      A dictionary containing the new label.
+    """
+    request_arguments = request.get_json()
+    label_text = request_arguments.get('label_text')
 
     if not label_text:
         abort(400)
@@ -486,6 +694,11 @@ def label_create():
 
 @app.route('/label/get_all', methods=['GET', 'POST'])
 def label_get_all():
+    """Gets all labels from the datastore.
+
+    Returns:
+      A dictionary containing the labels.
+    """
     labels = blogger_engine.GetAllLabels()
     if labels:
         return jsonify({
@@ -499,8 +712,16 @@ def label_get_all():
 
 @app.route('/label/get_by_id', methods=['POST'])
 def label_get_by_id():
-    content = request.get_json()
-    label_text = content.get('label_text')
+    """Gets a label by it's ID, which is also it's text.
+
+    Request Args:
+      label_text: string; The label to retrieve.
+
+    Returns:
+      A dictionary containing the label, if found.
+    """
+    request_arguments = request.get_json()
+    label_text = request_arguments.get('label_text')
 
     if not label_text:
         abort(400)
@@ -518,23 +739,57 @@ def label_get_by_id():
 
 @app.route('/label/add_to_blogpost', methods=['POST'])
 def label_add_to_blogpost():
+    """Adds a label to a blogpost, creating the label if necessary.
+
+    Request Args:
+      blogpost_id: string; The blogpost ID.
+      label_text: string; The label text.
+
+    Returns:
+      A dictionary containing the new label and the affected blogpost.
+    """
     return blogpost_add_label()
 
 
 @app.route('/label/remove_from_blogpost', methods=['POST'])
 def label_remove_from_blogpost():
+    """Removes a label from a blogpost.
+
+    Request Args:
+      label_text: string; The label to remove.
+      blogpost_id: string; The blogpost to remove the label from.
+
+    Returns:
+      A dictionary containing the affected blogpost and label.
+    """ 
     return blogpost_remove_label()
 
 
 @app.route('/label/get_all_blogposts_with_label', methods=['POST'])
 def label_get_all_blogposts_with_label():
+    """Gets all blogposts associated with a given label.
+
+    Request Args:
+      label_text: string; The label to query for.
+
+    Returns:
+      A dictionary containing the blogposts, if found.
+    """ 
     return blogpost_get_by_label()
 
 
 @app.route('/label/delete', methods=['POST'])
 def label_delete():
-    content = request.get_json()
-    label_text = content.get('label_text')
+    """Recursively deletes a label from the datastore and all blogposts.
+
+    Request Args:
+      label_text: string; The label to delete.
+
+    Returns:
+      A dictionary containing the deleted label and affected blogposts.
+    """
+    request_arguments = request.get_json()
+    label_text = request_arguments.get('label_text')
 
     if not label_text:
         abort(400)
