@@ -24,6 +24,7 @@ def author_create():
 
     Returns:
       A dictionary containing the new Author.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -44,6 +45,7 @@ def author_get_by_username():
 
     Returns:
       A dictionary with the retrieved author, if found.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -70,6 +72,7 @@ def author_get_all_blogposts():
 
     Returns:
       A dictionary of the the author's blogposts, if found.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -105,6 +108,7 @@ def author_get_all_removed_blogposts():
 
     Returns:
       A dictionary of removed blogposts, if found.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -118,7 +122,7 @@ def author_get_all_removed_blogposts():
             return jsonify({
                 'removed_blogposts': [blogpost.ToJson()
                                       for blogpost in
-                                          author.GetRemovedBlogposts()],
+                                      author.GetRemovedBlogposts()],
                 'author': author_json
             })
         else:
@@ -132,6 +136,7 @@ def author_get_all_removed_blogposts():
         'removed_blogposts': []
     })
 
+
 @app.route('/author/get_all_comments', methods=['POST'])
 def author_get_all_comments():
     """Gets all comments from a given author.
@@ -141,6 +146,7 @@ def author_get_all_comments():
 
     Returns:
       A dictionary of comments, if found.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -177,6 +183,7 @@ def author_get_all_removed_comments():
 
     Returns:
       A dictionary of removed comments, if found.
+
     """
     request_arguments = request.get_json()
     username = request_arguments.get('username')
@@ -190,7 +197,7 @@ def author_get_all_removed_comments():
             return jsonify({
                 'removed_comments': [comment.ToJson()
                                      for comment in
-                                         author.GetRemovedComments()],
+                                     author.GetRemovedComments()],
                 'author': author_json
             })
         else:
@@ -211,6 +218,7 @@ def author_get_all():
 
     Returns:
       A dictionary of all authors in the datastore.
+
     """
     authors = blogger_engine.GetAllAuthors()
     if authors:
@@ -236,6 +244,7 @@ def blogpost_create():
 
     Returns:
       A dictionary containing the new blogpost and author.
+
     """
     request_arguments = request.get_json()
 
@@ -264,6 +273,7 @@ def blogpost_add_label():
 
     Returns:
       A dictionary containing the new label and the affected blogpost.
+
     """
     request_arguments = request.get_json()
 
@@ -287,6 +297,7 @@ def blogpost_add_label():
         'blogpost': None
     })
 
+
 @app.route('/blogpost/remove_label', methods=['POST'])
 def blogpost_remove_label():
     """Removes a label from a blogpost.
@@ -297,6 +308,7 @@ def blogpost_remove_label():
 
     Returns:
       A dictionary containing the affected blogpost and label.
+
     """
     request_arguments = request.get_json()
     label_text = request_arguments.get('label_text')
@@ -345,6 +357,7 @@ def blogpost_add_comment():
 
     Returns:
       A dictionary containing the comment and affected blogpost.
+
     """
     request_arguments = request.get_json()
 
@@ -379,6 +392,7 @@ def blogpost_remove_comment():
 
     Returns:
       A dictionary containing the removed comment and affected blogpost.
+
     """
     request_arguments = request.get_json()
     comment_id = request_arguments.get('comment_id')
@@ -410,6 +424,7 @@ def blogpost_get_by_id():
 
     Returns:
       A dictionary containing the blogpost, if found.
+
     """
     request_arguments = request.get_json()
     blogpost_id = request_arguments.get('blogpost_id')
@@ -437,6 +452,7 @@ def blogpost_get_all_comments():
 
     Returns:
       A dictionary containing the retrieved comments and the blogpost.
+
     """
     request_arguments = request.get_json()
 
@@ -474,6 +490,7 @@ def blogpost_get_all_labels():
 
     Returns:
       A dictionary containing the blogpost and labels found.
+
     """
     request_arguments = request.get_json()
 
@@ -503,6 +520,7 @@ def blogpost_get_by_label():
 
     Returns:
       A dictionary containing the blogposts, if found.
+
     """
     request_arguments = request.get_json()
     label_text = request_arguments.get('label_text')
@@ -526,6 +544,7 @@ def blogpost_get_all():
 
     Returns:
       A dictionary containing all blogposts.
+
     """
     blogposts = blogger_engine.GetAllBlogposts()
     if blogposts:
@@ -540,11 +559,11 @@ def blogpost_get_all():
 
 @app.route('/blogpost/remove', methods=['POST'])
 def blogpost_remove():
-    """Removes a blogpost from the datastore, but allows the author
-       to keep it.
+    """Removes a blogpost from the datastore, but allows the author to keep it.
 
     Request Args:
       blogpost_id: string; The blogpost ID to remove.
+
     """
     request_arguments = request.get_json()
     blogpost_id = request_arguments.get('blogpost_id')
@@ -577,6 +596,7 @@ def blogpost_get_all_by_username():
 
     Returns:
       A dictionary containing the blogposts for a given author, if found.
+
     """
     return author_get_all_blogposts()
 
@@ -594,7 +614,8 @@ def comment_create():
 
     Returns:
       A dictionary containing the comment and affected blogpost.
-    """ 
+
+    """
     return blogpost_add_comment()
 
 
@@ -607,6 +628,7 @@ def comment_get_by_id():
 
     Returns:
       A dictinoary containing the comment, if found.
+
     """
     request_arguments = request.get_json()
     comment_id = request_arguments.get('comment_id')
@@ -634,7 +656,8 @@ def comment_remove():
 
     Returns:
       A dictionary containing the removed comment and affected blogpost.
-    """ 
+
+    """
     return blogpost_remove_comment()
 
 
@@ -647,6 +670,7 @@ def comment_get_all_by_username():
 
     Returns:
       A dictionary of comments, if found.
+
     """
     return author_get_all_comments()
 
@@ -657,6 +681,7 @@ def comments_get_all():
 
     Returns:
       A dictionary of comments.
+
     """
     comments = blogger_engine.GetAllComments()
     if comments:
@@ -680,6 +705,7 @@ def label_create():
 
     Returns:
       A dictionary containing the new label.
+
     """
     request_arguments = request.get_json()
     label_text = request_arguments.get('label_text')
@@ -698,6 +724,7 @@ def label_get_all():
 
     Returns:
       A dictionary containing the labels.
+
     """
     labels = blogger_engine.GetAllLabels()
     if labels:
@@ -719,6 +746,7 @@ def label_get_by_id():
 
     Returns:
       A dictionary containing the label, if found.
+
     """
     request_arguments = request.get_json()
     label_text = request_arguments.get('label_text')
@@ -747,6 +775,7 @@ def label_add_to_blogpost():
 
     Returns:
       A dictionary containing the new label and the affected blogpost.
+
     """
     return blogpost_add_label()
 
@@ -761,7 +790,8 @@ def label_remove_from_blogpost():
 
     Returns:
       A dictionary containing the affected blogpost and label.
-    """ 
+
+    """
     return blogpost_remove_label()
 
 
@@ -774,7 +804,8 @@ def label_get_all_blogposts_with_label():
 
     Returns:
       A dictionary containing the blogposts, if found.
-    """ 
+
+    """
     return blogpost_get_by_label()
 
 
@@ -787,6 +818,7 @@ def label_delete():
 
     Returns:
       A dictionary containing the deleted label and affected blogposts.
+
     """
     request_arguments = request.get_json()
     label_text = request_arguments.get('label_text')
