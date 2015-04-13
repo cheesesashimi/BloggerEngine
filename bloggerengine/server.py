@@ -8,10 +8,6 @@ app = Flask('BloggerEngine')
 blogger_engine = bloggerengine.BloggerEngine()
 
 
-@app.route('/')
-def index():
-    return 'Index Page'
-
 """Author methods."""
 
 
