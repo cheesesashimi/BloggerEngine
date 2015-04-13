@@ -191,7 +191,7 @@ class AuthorTests(unittest.TestCase):
         expected = author
         self.assertEquals(result, expected)
 
-    def test_ToJson(self):
+    def test_ToJson_WithCommentsAndBlogposts(self):
         author = author_model.Author(self.username)
 
         blogposts = list(self.GenerateBlogposts())
@@ -227,6 +227,23 @@ class AuthorTests(unittest.TestCase):
         self.assertIsNotNone(result['created_timestamp'])
         self.assertIsNotNone(result['id'])
         self.assertEquals(result['username'], self.username)
+        self.assertEquals(result['created_timestamp'],
+                          str(author.created_timestamp))
+
+    def test_ToJson_WithoutCommentsAndBlogposts(self):
+        author = author_model.Author(self.username)
+
+        result = author.toJson()
+
+        self.assertEquals(result['comments'], [])
+        self.assertEquals(result['blogposts'], [])
+        self.assertEquals(result['removed_blogposts'], [])
+        self.assertEquals(result['removed_comments'], [])
+        self.assertIsNotNone(result['created_timestamp'])
+        self.assertIsNotNone(result['id'])
+        self.assertEquals(result['username'], self.username)
+        self.assertEquals(result['created_timestamp'],
+                          str(author.created_timestamp))
 
     def GenerateBlogposts(self):
         for unused_x in xrange(5):
