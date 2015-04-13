@@ -77,6 +77,7 @@ class Author(base_model.BaseModel):
 
         Returns:
           A list of removed blogposts.
+
         """
         return self.removed_blogposts.values()
 
@@ -94,13 +95,16 @@ class Author(base_model.BaseModel):
 
         Returns:
           A list of all removed comments.
+
         """
         return self.removed_comments.values()
 
     def toJson(self):
         """Converts this object into a dictionary suitable for serialization.
+
         Returns:
           A dictionary.
+
         """
         return {
             'username': self.username,
@@ -110,8 +114,8 @@ class Author(base_model.BaseModel):
             'blogposts': [blogpost.id for blogpost in self.GetBlogposts()],
             'removed_blogposts': [blogpost.id
                                   for blogpost in
-                                      self.removed_blogposts.values()],
+                                  self.removed_blogposts.values()],
             'removed_comments': [comment.id
                                  for comment in
-                                     self.removed_comments.values()]
+                                 self.removed_comments.values()]
         }

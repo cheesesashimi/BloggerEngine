@@ -95,6 +95,7 @@ class ServerTest(unittest.TestCase):
         del self.labels
 
     """Author method tests."""
+
     def test_author_create_successful(self):
         post_data = {'username': 'steve'}
 
@@ -343,6 +344,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['authors'], expected_authors)
 
     """Blogpost tests."""
+
     def test_blogpost_add_label_blogpostfound(self):
         expected_blogpost = self.blogposts[0]
         post_data = {'label_text': 'something',
@@ -395,10 +397,10 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.toJson())
         self.assertTrue(expected_label.label not in
-            expected_blogpost.labels)
-        self.assertTrue(expected_blogpost.id not in 
-            expected_label.blogposts)
-    
+                        expected_blogpost.labels)
+        self.assertTrue(expected_blogpost.id not in
+                        expected_label.blogposts)
+
     def test_blogpost_remove_label_blogpostnotfound(self):
         expected_label = self.labels[2]
 
@@ -414,11 +416,11 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response_data['label'], expected_label.toJson())
         self.assertIsNone(response_data['blogpost'])
-    
+
     def test_blogpost_remove_label_labelnotfound(self):
         expected_blogpost = self.blogposts[0]
 
-        post_data = {'label_text': 'notfound', 
+        post_data = {'label_text': 'notfound',
                      'blogpost_id': expected_blogpost.id}
 
         response = self.app.post('/blogpost/remove_label',
@@ -464,7 +466,7 @@ class ServerTest(unittest.TestCase):
                           comment_text)
         self.assertTrue(comment_id in response_data['blogpost']['comments'])
         self.assertTrue(comment_id in
-                            response_data['comment']['author']['comments'])
+                        response_data['comment']['author']['comments'])
 
     def test_blogpost_add_comment_unsuccessful(self):
         expected_author = self.authors[0]
@@ -515,10 +517,10 @@ class ServerTest(unittest.TestCase):
                           expected_comment.toJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
                           expected_blogpost.toJson())
-        self.assertTrue(response_data['removed_comment']['id'] in 
-            response_data['removed_comment']['author']['removed_comments'])
-        self.assertTrue(response_data['removed_comment']['id'] not in 
-            response_data['removed_comment']['author']['comments'])
+        self.assertTrue(response_data['removed_comment']['id'] in
+                        response_data['removed_comment']['author']['removed_comments'])
+        self.assertTrue(response_data['removed_comment']['id'] not in
+                        response_data['removed_comment']['author']['comments'])
 
     def test_blogpost_remove_comment_commentidnotfound(self):
         expected_comment_id = '12345'
@@ -644,7 +646,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['labels'],
                           [expected_labels[0].toJson(),
                            expected_labels[1].toJson()])
- 
+
     def test_blogpost_get_all_labels_unsuccessful(self):
         post_data = {'blogpost_id': ''}
         response = self.app.post('/blogpost/get_all_labels',
@@ -839,7 +841,7 @@ class ServerTest(unittest.TestCase):
                           comment_text)
         self.assertTrue(comment_id in response_data['blogpost']['comments'])
         self.assertTrue(comment_id in
-                            response_data['comment']['author']['comments'])
+                        response_data['comment']['author']['comments'])
 
     def test_comment_create_unsuccessful(self):
         expected_author = self.authors[0]
@@ -886,7 +888,7 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
         self.assertEquals(response_data['comment'],
                           expected_comment.toJson())
- 
+
     def test_comment_get_by_id_notfound(self):
         post_data = {'comment_id': '12345'}
         response = self.app.post('/comment/get_by_id',
@@ -898,7 +900,7 @@ class ServerTest(unittest.TestCase):
         response_data = json.loads(response.data)
         self.assertIsNone(response_data['comment'])
 
-    def test_comment_get_by_id_unsuccessful(self): 
+    def test_comment_get_by_id_unsuccessful(self):
         post_data = {'comment_id': ''}
         response = self.app.post('/comment/get_by_id',
                                  data=json.dumps(post_data),
@@ -922,10 +924,10 @@ class ServerTest(unittest.TestCase):
                           expected_comment.toJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
                           expected_blogpost.toJson())
-        self.assertTrue(response_data['removed_comment']['id'] in 
-            response_data['removed_comment']['author']['removed_comments'])
-        self.assertTrue(response_data['removed_comment']['id'] not in 
-            response_data['removed_comment']['author']['comments'])
+        self.assertTrue(response_data['removed_comment']['id'] in
+                        response_data['removed_comment']['author']['removed_comments'])
+        self.assertTrue(response_data['removed_comment']['id'] not in
+                        response_data['removed_comment']['author']['comments'])
 
     def test_comment_remove_commentidnotfound(self):
         expected_comment_id = '12345'
@@ -947,7 +949,6 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 400)
-
 
     def test_comment_get_all_by_username_successful(self):
         post_data = {'username': 'zack'}
@@ -1028,6 +1029,7 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['comments'], [])
 
     """Label tests."""
+
     def test_label_create_successful(self):
         label_text = 'welcome'
         post_data = {'label_text': label_text}
@@ -1156,10 +1158,10 @@ class ServerTest(unittest.TestCase):
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.toJson())
         self.assertTrue(expected_label.label not in
-            expected_blogpost.labels)
-        self.assertTrue(expected_blogpost.id not in 
-            expected_label.blogposts)
-    
+                        expected_blogpost.labels)
+        self.assertTrue(expected_blogpost.id not in
+                        expected_label.blogposts)
+
     def test_label_remove_from_blogpost_label_blogpostnotfound(self):
         expected_label = self.labels[2]
 
@@ -1175,11 +1177,11 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response_data['label'], expected_label.toJson())
         self.assertIsNone(response_data['blogpost'])
-    
+
     def test_label_remove_from_blogpost_label_labelnotfound(self):
         expected_blogpost = self.blogposts[0]
 
-        post_data = {'label_text': 'notfound', 
+        post_data = {'label_text': 'notfound',
                      'blogpost_id': expected_blogpost.id}
 
         response = self.app.post('/label/remove_from_blogpost',
@@ -1252,8 +1254,8 @@ class ServerTest(unittest.TestCase):
                           expected_label.toJson())
 
         for blogpost in response_data['blogposts']:
-            self.assertTrue(expected_label.label not in blogpost['labels']) 
- 
+            self.assertTrue(expected_label.label not in blogpost['labels'])
+
     def test_label_delete_labelnotfound(self):
         post_data = {'label_text': 'notfound'}
 
@@ -1289,6 +1291,6 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 400)
- 
+
 if __name__ == '__main__':
     unittest.main()

@@ -126,7 +126,6 @@ class LabelTest(unittest.TestCase):
         self.assertEquals(result['created_timestamp'],
                           str(label.created_timestamp))
 
-
     def test_ToJson_NoBlogposts(self):
         label = label_model.Label('Test')
 
@@ -137,8 +136,6 @@ class LabelTest(unittest.TestCase):
         self.assertEquals(result['id'], label.storage_key)
         self.assertEquals(result['created_timestamp'],
                           str(label.created_timestamp))
-
-
 
 if __name__ == '__main__':
     unittest.main()

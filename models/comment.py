@@ -33,6 +33,7 @@ class Comment(base_model.BaseModel):
 
         Returns:
           A dictionary.
+
         """
         return {
             'author': self.author.toJson(),

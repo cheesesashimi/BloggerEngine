@@ -138,6 +138,7 @@ class BloggerEngine(object):
 
         Returns:
           A comment, if found. None, otherwise.
+
         """
         return comment_model.Comment.GetByStorageKey(comment_id)
 
@@ -256,6 +257,7 @@ class BloggerEngine(object):
 
         Returns:
           The deleted blogpost object.
+
         """
         blogpost = blogpost_model.Blogpost.GetByStorageKey(blogpost_id)
         if not blogpost:
@@ -276,6 +278,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of all label instances.
+
         """
         return label_model.Label.GetAll()
 
@@ -287,6 +290,7 @@ class BloggerEngine(object):
 
         Returns:
           A populated Label instance.
+
         """
         label = label_model.Label.GetByStorageKey(label_text)
         if not label:
@@ -302,6 +306,7 @@ class BloggerEngine(object):
 
         Returns:
           A populated Label instance, if found. Otherwise, None.
+
         """
         return label_model.Label.GetByStorageKey(label_text)
 
@@ -328,6 +333,7 @@ class BloggerEngine(object):
 
         Returns:
           A list of all author instances.
+
         """
         return author_model.Author.GetAll()
 
@@ -336,5 +342,6 @@ class BloggerEngine(object):
 
         Returns:
           A list of all comment instances.
+
         """
         return comment_model.Comment.GetAll()

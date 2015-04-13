@@ -82,8 +82,10 @@ class Blogpost(base_model.BaseModel):
 
     def toJson(self):
         """Converts this object into a dictionary suitable for serialization.
+
         Returns:
           A dictionary.
+
         """
         return {
             'author': self.author.toJson(),

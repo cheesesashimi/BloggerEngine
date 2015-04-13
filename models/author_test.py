@@ -166,7 +166,7 @@ class AuthorTests(unittest.TestCase):
             author.removed_comments[removed_comment.id] = removed_comment
 
         result = author.GetRemovedComments()
-        self.assertEquals(result, removed_removed_comments) 
+        self.assertEquals(result, removed_removed_comments)
 
     def test_Put(self):
         author = author_model.Author(self.username)

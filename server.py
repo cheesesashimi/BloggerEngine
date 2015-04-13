@@ -13,6 +13,8 @@ def index():
     return 'Index Page'
 
 """Author methods."""
+
+
 @app.route('/author/create', methods=['POST'])
 def author_create():
     content = request.get_json()
@@ -23,6 +25,7 @@ def author_create():
     return jsonify({
         'author': blogger_engine.GetOrInsertAuthor(username).toJson()
     })
+
 
 @app.route('/author/get_by_username', methods=['POST'])
 def author_get_by_username():
@@ -40,6 +43,7 @@ def author_get_by_username():
     return jsonify({
         'author': author
     })
+
 
 @app.route('/author/get_all_blogposts', methods=['POST'])
 def author_get_all_blogposts():
@@ -65,6 +69,7 @@ def author_get_all_blogposts():
         'author': author_json
     })
 
+
 @app.route('/author/get_all_removed_blogposts', methods=['POST'])
 def author_get_all_removed_blogposts():
     content = request.get_json()
@@ -78,7 +83,7 @@ def author_get_all_removed_blogposts():
         if author.GetRemovedBlogposts():
             removed_blogposts_json = [blogpost.toJson()
                                       for blogpost in
-                                          author.GetRemovedBlogposts()]
+                                      author.GetRemovedBlogposts()]
         else:
             removed_blogposts_json = []
     else:
@@ -89,6 +94,7 @@ def author_get_all_removed_blogposts():
         'removed_blogposts': removed_blogposts_json,
         'author': author_json
     })
+
 
 @app.route('/author/get_all_comments', methods=['POST'])
 def author_get_all_comments():
@@ -114,6 +120,7 @@ def author_get_all_comments():
         'author': author_json
     })
 
+
 @app.route('/author/get_all_removed_comments', methods=['POST'])
 def author_get_all_removed_comments():
     content = request.get_json()
@@ -127,7 +134,7 @@ def author_get_all_removed_comments():
         if author.GetRemovedComments():
             removed_comments_json = [comment.toJson()
                                      for comment in
-                                         author.GetRemovedComments()]
+                                     author.GetRemovedComments()]
         else:
             removed_comments_json = []
     else:
@@ -138,6 +145,7 @@ def author_get_all_removed_comments():
         'removed_comments': removed_comments_json,
         'author': author_json
     })
+
 
 @app.route('/author/get_all', methods=['GET', 'POST'])
 def author_get_all():
@@ -152,6 +160,8 @@ def author_get_all():
     })
 
 """Blogpost methods."""
+
+
 @app.route('/blogpost/create', methods=['POST'])
 def blogpost_create():
     content = request.get_json()
@@ -168,6 +178,7 @@ def blogpost_create():
                                                   headline,
                                                   body).toJson()
     })
+
 
 @app.route('/blogpost/add_label', methods=['POST'])
 def blogpost_add_label():
@@ -191,7 +202,8 @@ def blogpost_add_label():
         'label': label_json,
         'blogpost': blogpost_json
     })
-        
+
+
 @app.route('/blogpost/remove_label', methods=['POST'])
 def blogpost_remove_label():
     content = request.get_json()
@@ -229,6 +241,7 @@ def blogpost_remove_label():
         'blogpost': None
     })
 
+
 @app.route('/blogpost/add_comment', methods=['POST'])
 def blogpost_add_comment():
     content = request.get_json()
@@ -247,18 +260,19 @@ def blogpost_add_comment():
         comment_json = comment.toJson()
     else:
         blogpost_json = None
-        comment_json = None        
+        comment_json = None
 
     return jsonify({
         'comment': comment_json,
         'blogpost': blogpost_json,
     })
 
+
 @app.route('/blogpost/remove_comment', methods=['POST'])
 def blogpost_remove_comment():
     content = request.get_json()
     comment_id = content.get('comment_id')
-    
+
     if not comment_id:
         abort(400)
 
@@ -275,6 +289,7 @@ def blogpost_remove_comment():
         'removed_comment': None,
         'blogpost': None
     })
+
 
 @app.route('/blogpost/get_by_id', methods=['POST'])
 def blogpost_get_by_id():
@@ -293,6 +308,7 @@ def blogpost_get_by_id():
     return jsonify({
         'blogpost': None
     })
+
 
 @app.route('/blogpost/get_all_comments', methods=['POST'])
 def blogpost_get_all_comments():
@@ -322,6 +338,7 @@ def blogpost_get_all_comments():
         'blogpost': None
     })
 
+
 @app.route('/blogpost/get_all_labels', methods=['POST'])
 def blogpost_get_all_labels():
     content = request.get_json()
@@ -342,6 +359,7 @@ def blogpost_get_all_labels():
         'labels': []
     })
 
+
 @app.route('/blogpost/get_by_label', methods=['POST'])
 def blogpost_get_by_label():
     content = request.get_json()
@@ -359,6 +377,7 @@ def blogpost_get_by_label():
         'blogposts': []
     })
 
+
 @app.route('/blogpost/get_all', methods=['GET', 'POST'])
 def blogpost_get_all():
     blogposts = blogger_engine.GetAllBlogposts()
@@ -370,6 +389,7 @@ def blogpost_get_all():
     return jsonify({
         'blogposts': []
     })
+
 
 @app.route('/blogpost/remove', methods=['POST'])
 def blogpost_remove():
@@ -394,20 +414,24 @@ def blogpost_remove():
             'author': author.toJson()
         })
 
+
 @app.route('/blogpost/get_all_by_username', methods=['POST'])
 def blogpost_get_all_by_username():
     return author_get_all_blogposts()
 
 """Comment methods."""
+
+
 @app.route('/comment/create', methods=['POST'])
 def comment_create():
     return blogpost_add_comment()
+
 
 @app.route('/comment/get_by_id', methods=['POST'])
 def comment_get_by_id():
     content = request.get_json()
     comment_id = content.get('comment_id')
-    
+
     if not comment_id:
         abort(400)
 
@@ -421,14 +445,17 @@ def comment_get_by_id():
         'comment': None
     })
 
+
 @app.route('/comment/remove', methods=['POST'])
 def comment_remove():
     return blogpost_remove_comment()
 
+
 @app.route('/comment/get_all_by_username', methods=['POST'])
 def comment_get_all_by_username():
     return author_get_all_comments()
-    
+
+
 @app.route('/comment/get_all', methods=['GET', 'POST'])
 def comments_get_all():
     comments = blogger_engine.GetAllComments()
@@ -442,6 +469,8 @@ def comments_get_all():
     })
 
 """Label methods."""
+
+
 @app.route('/label/create', methods=['POST'])
 def label_create():
     content = request.get_json()
@@ -454,6 +483,7 @@ def label_create():
         'label': blogger_engine.GetOrInsertLabel(label_text).toJson()
     })
 
+
 @app.route('/label/get_all', methods=['GET', 'POST'])
 def label_get_all():
     labels = blogger_engine.GetAllLabels()
@@ -465,6 +495,7 @@ def label_get_all():
     return jsonify({
         'labels': []
     })
+
 
 @app.route('/label/get_by_id', methods=['POST'])
 def label_get_by_id():
@@ -484,17 +515,21 @@ def label_get_by_id():
         'label': label_json
     })
 
+
 @app.route('/label/add_to_blogpost', methods=['POST'])
 def label_add_to_blogpost():
     return blogpost_add_label()
+
 
 @app.route('/label/remove_from_blogpost', methods=['POST'])
 def label_remove_from_blogpost():
     return blogpost_remove_label()
 
+
 @app.route('/label/get_all_blogposts_with_label', methods=['POST'])
 def label_get_all_blogposts_with_label():
     return blogpost_get_by_label()
+
 
 @app.route('/label/delete', methods=['POST'])
 def label_delete():
