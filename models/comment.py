@@ -27,4 +27,17 @@ class Comment(base_model.BaseModel):
         """Removes this comment from the attached blogpost."""
         self.author.RemoveComment(self)
         self.blogpost.RemoveComment(self)
-        self.blogpost = None
+
+    def toJson(self):
+        """Converts this object into a dictionary suitable for serialization.
+
+        Returns:
+          A dictionary.
+        """
+        return {
+            'author': self.author.toJson(),
+            'blogpost': self.blogpost.toJson(),
+            'created_timestamp': str(self.created_timestamp),
+            'comment_text': self.comment_text,
+            'id': self.id
+        }
