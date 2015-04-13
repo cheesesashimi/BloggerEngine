@@ -22,7 +22,7 @@ class BloggerEngine(object):
           A Blogpost instance with a nested Author instance.
 
         """
-        author = self.GetOrInsertAuthor_(username)
+        author = self.GetOrInsertAuthor(username)
 
         post = blogpost_model.Blogpost(author, headline, body)
         post.put()
@@ -49,6 +49,7 @@ class BloggerEngine(object):
             label = label_model.Label(label_text)
             label.put()
 
+        post.AddLabel(label)
         label.AddToBlogpost(post)
         return label
 
@@ -65,7 +66,7 @@ class BloggerEngine(object):
         if not post:
             return None
 
-        author = self.GetOrInsertAuthor_(username)
+        author = self.GetOrInsertAuthor(username)
         comment = comment_model.Comment(author, post, comment_text)
         comment.put()
 
@@ -128,6 +129,17 @@ class BloggerEngine(object):
         author = author_model.Author.GetByStorageKey(username)
         if author:
             return author.GetComments()
+
+    def GetCommentById(self, comment_id):
+        """Gets a comment from a given comment_id.
+
+        Args:
+          comment_id: string; The comment id to get.
+
+        Returns:
+          A comment, if found. None, otherwise.
+        """
+        return comment_model.Comment.GetByStorageKey(comment_id)
 
     def GetBlogpostsByUsername(self, username):
         """Gets all blog posts for a given username.
@@ -252,7 +264,37 @@ class BloggerEngine(object):
         blogpost.delete()
         return blogpost
 
-    def GetOrInsertAuthor_(self, username):
+    def GetAllLabels(self):
+        """Gets all labels."""
+        return label_model.Label.GetAll()
+
+    def GetOrInsertLabel(self, label_text):
+        """Gets or inserts a label.
+
+        Args:
+          label_text: string; The label text to get or insert.
+
+        Returns:
+          A populated Label instance.
+        """
+        label = label_model.Label.GetByStorageKey(label_text)
+        if not label:
+            label = label_model.Label(label_text)
+            label.put()
+        return label
+
+    def GetLabel(self, label_text):
+        """Gets a label by it's label text.
+
+        Args:
+          label_text: string; The label text to get.
+
+        Returns:
+          A populated Label instance, if found. Otherwise, None.
+        """
+        return label_model.Label.GetByStorageKey(label_text)
+
+    def GetOrInsertAuthor(self, username):
         """Gets or inserts an Author object by username.
 
         Args:
@@ -269,3 +311,11 @@ class BloggerEngine(object):
         author = author_model.Author(username)
         author.put()
         return author
+
+    def GetAllAuthors(self):
+        """Gets all authors."""
+        return author_model.Author.GetAll()
+
+    def GetAllComments(self):
+        """Gets all comments."""
+        return comment_model.Comment.GetAll()

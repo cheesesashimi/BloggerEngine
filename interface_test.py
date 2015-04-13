@@ -118,7 +118,8 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertIsInstance(result, label_model.Label)
         self.assertEquals(result.label, self.label_text)
-
+        self.assertTrue(result.label in blogpost.labels)
+        self.assertTrue(blogpost.id in result.blogposts)
         self.assertEquals(len(label_model.Label.instances['Label']), 4)
 
     def test_AddLabelToBlogpost_BlogpostNotFound(self):
@@ -184,7 +185,6 @@ class BloggerEngineTest(unittest.TestCase):
 
         self.assertTrue(blogpost.id not in label1.blogposts)
         self.assertTrue(blogpost.id not in label3.blogposts)
-        self.assertIsNone(comment.blogpost)
 
         self.assertTrue(blogpost.id not in author.blogposts)
         self.assertTrue(blogpost.id not in author.removed_blogposts)
@@ -235,7 +235,6 @@ class BloggerEngineTest(unittest.TestCase):
 
         result = self.blogger_engine.RemoveCommentFromBlogpost(comment.id)
         self.assertEquals(comment, result)
-        self.assertIsNone(comment.blogpost)
         self.assertTrue(comment.id not in blogpost.comments)
         self.assertTrue(comment.id not in comment.author.comments)
         self.assertTrue(comment.id in comment.author.removed_comments)
@@ -308,14 +307,14 @@ class BloggerEngineTest(unittest.TestCase):
         result = self.blogger_engine.GetBlogpostsByLabel('nothing')
         self.assertIsNone(result)
 
-    def test_GetOrInsertAuthor_AuthorFound(self):
-        result = self.blogger_engine.GetOrInsertAuthor_('zack')
+    def test_GetOrInsertAuthorAuthorFound(self):
+        result = self.blogger_engine.GetOrInsertAuthor('zack')
         expected = self.authors[1]
         self.assertEquals(result, expected)
         self.assertEquals(len(author_model.Author.instances['Author']), 2)
 
-    def test_GetOrInsertAuthor_AuthorNotFound(self):
-        result = self.blogger_engine.GetOrInsertAuthor_('jon')
+    def test_GetOrInsertAuthorAuthorNotFound(self):
+        result = self.blogger_engine.GetOrInsertAuthor('jon')
         self.assertEquals(result.username, 'jon')
         self.assertIsInstance(result, author_model.Author)
         self.assertEquals(len(author_model.Author.instances['Author']), 3)
@@ -386,6 +385,50 @@ class BloggerEngineTest(unittest.TestCase):
         expected = []
         self.assertEquals(result, [])
 
+    def test_GetCommentById_CommentFound(self):
+        expected_comment = self.comments[0]
+        result = self.blogger_engine.GetCommentById(expected_comment.id)
+        self.assertEquals(result, expected_comment)
+
+    def test_GetCommentById_CommentNotFound(self):
+        expected_comment_id = '12345'
+        result = self.blogger_engine.GetCommentById(expected_comment_id)
+        self.assertIsNone(result)
+
+    def test_GetAllLabels(self):
+        result = self.blogger_engine.GetAllLabels()
+        expected = self.labels
+        self.assertEquals(result, expected)
+
+    def test_GetOrInsertLabel_LabelFound(self):
+        result = self.blogger_engine.GetOrInsertLabel('good stuff')
+        expected = self.labels[2]
+        self.assertEquals(result, expected)
+        self.assertEquals(len(label_model.Label.instances['Label']), 3)
+
+    def test_GetOrInsertLabel_LabelNotFound(self):
+        result = self.blogger_engine.GetOrInsertLabel('new')
+        self.assertEquals(result.label, 'new')
+        self.assertIsInstance(result, label_model.Label)
+        self.assertEquals(len(label_model.Label.instances['Label']), 4)
+
+    def test_GetLabel_LabelFound(self):
+        expected_label = self.labels[2]
+        result = self.blogger_engine.GetLabel('good stuff')
+        self.assertEquals(result, expected_label)
+
+    def test_GetLabel_LabelNotFound(self):
+        label_text = 'notfound'
+        result = self.blogger_engine.GetLabel(label_text)
+        self.assertIsNone(result)
+
+    def test_GetAllAuthors(self):
+        result = self.blogger_engine.GetAllAuthors()
+        self.assertEquals(result, self.authors)
+
+    def test_GetAllComments(self):
+        result = self.blogger_engine.GetAllComments()
+        self.assertEquals(result, self.comments)
 
 if __name__ == '__main__':
     unittest.main()
