@@ -1,5 +1,8 @@
 ###BloggerEngine
 
+[![Build
+Status](https://travis-ci.org/cheesesashimi/BloggerEngine.svg?branch=master)](https://travis-ci.org/cheesesashimi/BloggerEngine)
+
 BloggerEngine aims to be a simple, memory-persistent prototype blogging
 engine.
 
