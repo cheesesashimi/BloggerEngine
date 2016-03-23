@@ -1,4 +1,4 @@
-BloggerEngine
+###BloggerEngine
 
 BloggerEngine aims to be a simple, memory-persistent prototype blogging
 engine.
@@ -18,9 +18,8 @@ While one shouldn't need to manually install those, it is worth mentioning.
 
 To Get Started:
 - Clone this git repo.
-- Run $ python setup.py.
-- Run the start_server.sh script.
-- To run all the tests, use the provided run_tests.sh script.
+- Run the `start_server.sh` script.
+- To run all the tests, use the provided `run_tests.sh` script.
 
 The server uses Flask and implements a number of URL methods for
 working with authors, blogposts, comments and labels. These URLs accept
