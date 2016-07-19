@@ -4,8 +4,7 @@ python:
     - "2.7"
 
 install:
-    - pip install flask
-    - pip install mock
+    - pip install -r requirements.txt
 
 script:
-    - ./run_tests.sh
+    - nosetests --exe --with-timer ./
