@@ -2,14 +2,13 @@
 
 import unittest
 import json
-import bloggerengine
-import server
 
-import author as author_model
-import base_model
-import blogpost as blogpost_model
-import comment as comment_model
-import label as label_model
+from bloggerengine import author as author_model
+from bloggerengine import base_model
+from bloggerengine import blogpost as blogpost_model
+from bloggerengine import comment as comment_model
+from bloggerengine import label as label_model
+from bloggerengine import server
 
 
 class ServerTest(unittest.TestCase):

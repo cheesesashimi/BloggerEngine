@@ -3,9 +3,9 @@
 import mock
 import unittest
 
-import author as author_model
-import blogpost as blogpost_model
-import comment as comment_model
+from bloggerengine import author as author_model
+from bloggerengine import blogpost as blogpost_model
+from bloggerengine import comment as comment_model
 
 
 class CommentTest(unittest.TestCase):
