@@ -3,8 +3,8 @@
 import mock
 import unittest
 
-import blogpost as blogpost_model
-import label as label_model
+from bloggerengine import blogpost as blogpost_model
+from bloggerengine import label as label_model
 
 from collections import OrderedDict
 

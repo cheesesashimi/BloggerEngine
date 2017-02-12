@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import unittest
-import base_model
+
+from bloggerengine import base_model
 
 from collections import OrderedDict
 
