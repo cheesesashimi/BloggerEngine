@@ -31,40 +31,40 @@ assuming the request is successful. URLs missing arguments do not require
 them.
 
 Author URLs:
-- /author/create - username
-- /author/get_all
-- /author/get_all_blogposts - username
-- /author/get_all_comments - username
-- /author/get_all_removed_blogposts - username
-- /author/get_all_removed_comments - username
-- /author/get_by_username - username
+- `/author/create` - username
+- `/author/get_all`
+- `/author/get_all_blogposts` - username
+- `/author/get_all_comments` - username
+- `/author/get_all_removed_blogposts` - username
+- `/author/get_all_removed_comments` - username
+- `/author/get_by_username` - username
 
 Blogpost URLs:
-- /blogpost/add_comment - username, blogpost_id
-- /blogpost/add_label - blogpost_id
-- /blogpost/create - username, headline, body
-- /blogpost/get_all
-- /blogpost/get_all_by_username - username
-- /blogpost/get_all_comments
-- /blogpost/get_all_labels
-- /blogpost/get_by_id - blogpost_id
-- /blogpost/get_by_label - label_text
-- /blogpost/remove - blogpost_id
-- /blogpost/remove_comment - comment_id
-- /blogpost/remove_label - label_text
+- `/blogpost/add_comment` - username, blogpost_id
+- `/blogpost/add_label` - blogpost_id
+- `/blogpost/create` - username, headline, body
+- `/blogpost/get_all`
+- `/blogpost/get_all_by_username` - username
+- `/blogpost/get_all_comments`
+- `/blogpost/get_all_labels`
+- `/blogpost/get_by_id` - blogpost_id
+- `/blogpost/get_by_label` - label_text
+- `/blogpost/remove` - blogpost_id
+- `/blogpost/remove_comment` - comment_id
+- `/blogpost/remove_label `- label_text
 
 Comment URLs:
-- /comment/create - username, comment_content
-- /comment/get_all
-- /comment/get_all_by_username - username
-- /comment/get_by_id - comment_id
-- /comment/remove - comment_id
+- `/comment/create` - username, comment_content
+- `/comment/get_all`
+- `/comment/get_all_by_username` - username
+- `/comment/get_by_id` - comment_id
+- `/comment/remove` - comment_id
 
 Label URLs:
-- /label/add_to_blogpost - label_text, blogpost_id
-- /label/create - label_text
-- /label/delete - label_text
-- /label/get_all
-- /label/get_all_blogposts_with_label
-- /label/get_by_id - label_text
-- /label/remove_from_blogpost - label_text, blogpost_id
+- `/label/add_to_blogpost` - label_text, blogpost_id
+- `/label/create` - label_text
+- `/label/delete` - label_text
+- `/label/get_all`
+- `/label/get_all_blogposts_with_label`
+- `/label/get_by_id - label_text`
+- `/label/remove_from_blogpost` - label_text, blogpost_id

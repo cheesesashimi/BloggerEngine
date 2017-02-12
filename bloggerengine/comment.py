@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import base_model
+from bloggerengine import base_model
 
 
 class Comment(base_model.BaseModel):

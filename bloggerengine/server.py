@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-import bloggerengine
+from bloggerengine import engine
 from flask import Flask, abort, json, jsonify, request
 
 app = Flask('BloggerEngine')
 
-blogger_engine = bloggerengine.BloggerEngine()
+blogger_engine = engine.BloggerEngine()
 
 
 """Author methods."""

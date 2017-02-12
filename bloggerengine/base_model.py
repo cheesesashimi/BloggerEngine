@@ -46,7 +46,7 @@ class BaseModel(object):
           A list of object instances, if found. Otherwise, an empty list.
 
         """
-        return cls.instances.get(cls.__name__, {}).values()
+        return list(cls.instances.get(cls.__name__, {}).values())
 
     @classmethod
     def GetByStorageKey(cls, storage_key):

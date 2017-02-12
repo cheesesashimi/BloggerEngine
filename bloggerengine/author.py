@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import base_model
+from bloggerengine import base_model
 from collections import OrderedDict
 
 
@@ -70,7 +70,7 @@ class Author(base_model.BaseModel):
           A list of all blog posts for this user.
 
         """
-        return self.blogposts.values()
+        return list(self.blogposts.values())
 
     def GetRemovedBlogposts(self):
         """Gets a list of removed blogposts.
@@ -79,7 +79,7 @@ class Author(base_model.BaseModel):
           A list of removed blogposts.
 
         """
-        return self.removed_blogposts.values()
+        return list(self.removed_blogposts.values())
 
     def GetComments(self):
         """Gets all comments for this user.
@@ -88,7 +88,7 @@ class Author(base_model.BaseModel):
           A list of all comments for this user.
 
         """
-        return self.comments.values()
+        return list(self.comments.values())
 
     def GetRemovedComments(self):
         """Gets a list of removed comments.
@@ -97,7 +97,7 @@ class Author(base_model.BaseModel):
           A list of all removed comments.
 
         """
-        return self.removed_comments.values()
+        return list(self.removed_comments.values())
 
     def ToJson(self):
         """Converts this object into a dictionary suitable for serialization.

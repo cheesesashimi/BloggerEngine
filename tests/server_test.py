@@ -103,7 +103,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['author']['username'],
                           post_data['username'])
@@ -127,7 +127,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
@@ -146,7 +146,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
 
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['author'])
 
@@ -157,7 +157,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_blogposts = [self.blogposts[0].ToJson(),
                               self.blogposts[1].ToJson()]
@@ -180,7 +180,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['author'], None)
         self.assertEquals(response_data['blogposts'], [])
@@ -194,7 +194,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['author'], steve.ToJson())
         self.assertEquals(response_data['blogposts'], [])
@@ -205,7 +205,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_author = self.authors[1].ToJson()
         expected_comments = [self.comments[2].ToJson()]
@@ -220,7 +220,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
     def test_author_get_all_comments_userhasnocomments(self):
         steve = author_model.Author('steve')
@@ -231,7 +231,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_author = steve.ToJson()
         expected_comments = []
@@ -246,7 +246,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['removed_blogposts'], [])
@@ -262,7 +262,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['author'], expected_author.ToJson())
         self.assertEquals(response_data['removed_blogposts'],
                           [removed_blogpost.ToJson()])
@@ -273,7 +273,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['author'])
         self.assertEquals(response_data['removed_blogposts'], [])
@@ -285,7 +285,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         expected_author = self.authors[1].ToJson()
         self.assertEquals(response_data['author'], expected_author)
         self.assertEquals(response_data['removed_comments'], [])
@@ -301,7 +301,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['author'], expected_author.ToJson())
         self.assertEquals(response_data['removed_comments'],
                           [removed_comment.ToJson()])
@@ -312,7 +312,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['author'])
         self.assertEquals(response_data['removed_comments'], [])
@@ -323,7 +323,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_authors = [self.authors[0].ToJson(),
                             self.authors[1].ToJson()]
@@ -335,7 +335,7 @@ class ServerTest(unittest.TestCase):
         response = self.app.get('/author/get_all',
                                 content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_authors = [self.authors[0].ToJson(),
                             self.authors[1].ToJson()]
@@ -352,7 +352,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_label = label_model.Label.GetByStorageKey('something')
         self.assertEquals(response_data['label'], expected_label.ToJson())
@@ -367,7 +367,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['label'])
         self.assertIsNone(response_data['blogpost'])
@@ -390,7 +390,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
@@ -411,7 +411,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertIsNone(response_data['blogpost'])
@@ -427,7 +427,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['label'])
         self.assertEquals(response_data['blogpost'],
@@ -455,7 +455,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         comment_id = response_data['comment']['id']
 
@@ -496,7 +496,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertIsNone(response_data['comment'])
         self.assertIsNone(response_data['blogpost'])
 
@@ -511,7 +511,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['removed_comment'],
                           expected_comment.ToJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
@@ -530,7 +530,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['blogpost'])
         self.assertIsNone(response_data['removed_comment'])
@@ -550,7 +550,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.ToJson())
@@ -569,7 +569,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['blogpost'])
 
@@ -583,7 +583,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.ToJson())
@@ -601,7 +601,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.ToJson())
@@ -615,7 +615,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['blogpost'])
         self.assertEquals(response_data['comments'], [])
@@ -637,7 +637,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['blogpost'],
                           expected_blogpost.ToJson())
@@ -661,7 +661,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['blogpost'])
         self.assertEquals(response_data['labels'], [])
@@ -677,7 +677,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
@@ -698,7 +698,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['blogposts'], [])
 
     def test_blogpost_get_all_post(self):
@@ -708,7 +708,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
@@ -721,7 +721,7 @@ class ServerTest(unittest.TestCase):
                                 content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
@@ -738,7 +738,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['removed_blogpost'],
                           expected_blogpost.ToJson())
         self.assertEquals(response_data['author'],
@@ -760,7 +760,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertIsNone(response_data['removed_blogpost'])
         self.assertIsNone(response_data['author'])
 
@@ -771,7 +771,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_blogposts = [self.blogposts[0].ToJson(),
                               self.blogposts[1].ToJson()]
@@ -794,7 +794,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['author'], None)
         self.assertEquals(response_data['blogposts'], [])
@@ -808,7 +808,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['author'], steve.ToJson())
         self.assertEquals(response_data['blogposts'], [])
@@ -830,7 +830,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         comment_id = response_data['comment']['id']
 
@@ -871,7 +871,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertIsNone(response_data['comment'])
         self.assertIsNone(response_data['blogpost'])
 
@@ -884,7 +884,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['comment'],
                           expected_comment.ToJson())
 
@@ -896,7 +896,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertIsNone(response_data['comment'])
 
     def test_comment_get_by_id_unsuccessful(self):
@@ -918,7 +918,7 @@ class ServerTest(unittest.TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['removed_comment'],
                           expected_comment.ToJson())
         self.assertEquals(response_data['removed_comment']['blogpost'],
@@ -937,7 +937,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['blogpost'])
         self.assertIsNone(response_data['removed_comment'])
@@ -955,7 +955,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_author = self.authors[1].ToJson()
         expected_comments = [self.comments[2].ToJson()]
@@ -970,7 +970,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
     def test_comment_get_all_by_username_userhasnocomments(self):
         steve = author_model.Author('steve')
@@ -981,7 +981,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_author = steve.ToJson()
         expected_comments = []
@@ -995,7 +995,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_comments_json = [comment.ToJson()
                                   for comment in self.comments]
@@ -1007,7 +1007,7 @@ class ServerTest(unittest.TestCase):
         response = self.app.get('/comment/get_all',
                                 content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_comments_json = [comment.ToJson()
                                   for comment in self.comments]
@@ -1023,7 +1023,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['comments'], [])
 
@@ -1037,7 +1037,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label']['label'], label_text)
 
@@ -1047,7 +1047,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_label_json = [label.ToJson() for label in self.labels]
 
@@ -1060,7 +1060,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['labels'], [])
 
@@ -1068,7 +1068,7 @@ class ServerTest(unittest.TestCase):
         response = self.app.get('/label/get_all',
                                 content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_label_json = [label.ToJson() for label in self.labels]
 
@@ -1082,7 +1082,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label'], expected_label.ToJson())
 
@@ -1093,7 +1093,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['label'])
 
@@ -1113,7 +1113,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         expected_label = label_model.Label.GetByStorageKey('something')
         self.assertEquals(response_data['label'], expected_label.ToJson())
@@ -1128,7 +1128,7 @@ class ServerTest(unittest.TestCase):
                                  data=json.dumps(post_data),
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['label'])
         self.assertIsNone(response_data['blogpost'])
@@ -1151,7 +1151,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertEquals(response_data['blogpost'],
@@ -1172,7 +1172,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['label'], expected_label.ToJson())
         self.assertIsNone(response_data['blogpost'])
@@ -1188,7 +1188,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertIsNone(response_data['label'])
         self.assertEquals(response_data['blogpost'],
@@ -1212,7 +1212,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         expected_blogposts_json = [blogpost.ToJson()
                                    for blogpost in self.blogposts]
         self.assertEquals(response_data['blogposts'],
@@ -1233,7 +1233,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['blogposts'], [])
 
     def test_label_delete_successful(self):
@@ -1247,7 +1247,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
 
         self.assertEquals(response_data['deleted_label'],
                           expected_label.ToJson())
@@ -1263,7 +1263,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertIsNone(response_data['deleted_label'])
         self.assertEquals(response_data['blogposts'], [])
 
@@ -1278,7 +1278,7 @@ class ServerTest(unittest.TestCase):
                                  content_type='application/json')
         self.assertEquals(response.status_code, 200)
 
-        response_data = json.loads(response.data)
+        response_data = json.loads(response.get_data(as_text=True))
         self.assertEquals(response_data['deleted_label'],
                           label.ToJson())
         self.assertEquals(response_data['blogposts'], [])

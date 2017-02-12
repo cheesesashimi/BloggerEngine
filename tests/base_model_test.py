@@ -122,7 +122,7 @@ class BaseModelTests(unittest.TestCase):
         self.assertIsNone(result)
 
     def GenerateBaseModelInstances(self):
-        for unused_x in xrange(5):
+        for unused_x in range(5):
             base = base_model.BaseModel()
             yield base
 

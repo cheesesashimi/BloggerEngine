@@ -14,8 +14,8 @@ class AuthorTests(unittest.TestCase):
     def setUp(self):
         author_model.Author.instances = {}
         self.username = 'zack'
-        self.blogpost = self.GenerateBlogposts().next()
-        self.comment = self.GenerateComments().next()
+        self.blogpost = list(self.GenerateBlogposts())[0]
+        self.comment = list(self.GenerateComments())[0]
 
     def tearDown(self):
         del self.username
@@ -246,13 +246,13 @@ class AuthorTests(unittest.TestCase):
                           str(author.created_timestamp))
 
     def GenerateBlogposts(self):
-        for unused_x in xrange(5):
+        for unused_x in range(5):
             blogpost = mock.MagicMock(spec=blogpost_model.Blogpost)
             blogpost.id = id(blogpost)
             yield blogpost
 
     def GenerateComments(self):
-        for unused_x in xrange(5):
+        for unused_x in range(5):
             comment = mock.MagicMock(spec=comment_model.Comment)
             comment.id = id(comment)
             yield comment

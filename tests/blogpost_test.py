@@ -17,8 +17,8 @@ class BlogpostTests(unittest.TestCase):
         blogpost_model.Blogpost.instances = {}
         self.author = mock.MagicMock(spec=author_model.Author)
         self.author.id = str(id(self.author))
-        self.comment = self.GenerateComments().next()
-        self.label = self.GenerateLabels().next()
+        self.comment = list(self.GenerateComments())[0]
+        self.label = list(self.GenerateLabels())[0]
         self.headline = 'Hello world!'
         self.body = 'I\'m a blog post!'
 
@@ -240,7 +240,7 @@ class BlogpostTests(unittest.TestCase):
     def GenerateComments(self):
         # I used a generator here since I needed to set the id property,
         # otherwise, I would've just used a list comprehension.
-        for unused_x in xrange(5):
+        for unused_x in range(5):
             comment = mock.MagicMock(spec=comment_model.Comment)
             comment.id = id(comment)
             yield comment
@@ -248,7 +248,7 @@ class BlogpostTests(unittest.TestCase):
     def GenerateLabels(self):
         # I used a generator here since I needed to set the label property,
         # otherwise, I would've just used a list comprehension.
-        for unused_x in xrange(5):
+        for unused_x in range(5):
             label = mock.MagicMock(spec=label_model.Label)
             label.label = str(id(label))
             yield label

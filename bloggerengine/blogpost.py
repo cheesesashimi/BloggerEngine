@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from collections import OrderedDict
-import base_model
+from bloggerengine import base_model
 
 
 class Blogpost(base_model.BaseModel):
@@ -69,7 +69,7 @@ class Blogpost(base_model.BaseModel):
           A list of comments.
 
         """
-        return self.comments.values()
+        return list(self.comments.values())
 
     def GetLabels(self):
         """Gets all labels associated with this blog post.
@@ -78,7 +78,7 @@ class Blogpost(base_model.BaseModel):
           A list of labels.
 
         """
-        return self.labels.values()
+        return list(self.labels.values())
 
     def ToJson(self):
         """Converts this object into a dictionary suitable for serialization.

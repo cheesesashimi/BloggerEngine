@@ -2,11 +2,11 @@
 
 import unittest
 
-from bloggerengine import bloggerengine
 from bloggerengine import author as author_model
 from bloggerengine import base_model
 from bloggerengine import blogpost as blogpost_model
 from bloggerengine import comment as comment_model
+from bloggerengine import engine
 from bloggerengine import label as label_model
 
 
@@ -80,7 +80,7 @@ class BloggerEngineTest(unittest.TestCase):
         self.comments = [comment1, comment2, comment3]
         self.labels = [label1, label2, label3]
 
-        self.blogger_engine = bloggerengine.BloggerEngine()
+        self.blogger_engine = engine.BloggerEngine()
 
     def tearDown(self):
         del self.blogger_engine
